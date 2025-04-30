@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>marygold</title>
+
+    <!--CSS-->
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0px;
+      }
+    </style>
+
+    <!--Fonte-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
+
+    <!--adicionando a biblioteca phaser-->
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.88.2/dist/phaser.min.js"></script>
+  </head>
+  <body>
+    <!--Cenas-->
+    <script src="src/pipeline.js"></script>
+    <script src="src/player.js"></script>
+    <!-- <script src="src/scenes/title.js"></script> -->
+    <script src="src/scenes/garden.js"></script>
+    <!-- <script src="src/scenes/end.js"></script> -->
+
+    <!--Logica do jogo-->
+    <script src="src/main.js"></script>
+  </body>
+</html>
