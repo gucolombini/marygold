@@ -20,7 +20,7 @@ var config = {
     default: "arcade", //fisicas tipo arcade
     arcade: {
       gravity: { y: 0 }, //Retirando a gravidade do jogo
-      debug: false, //ativa o modo de debug/depuracao
+      debug: true, //ativa o modo de debug/depuracao
     },
   },
   scale: {

@@ -7,6 +7,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.setSize(50, 32);
         this.body.setOffset(7, 70);
         this.speed = 200;
+        this.carrots = 0;
         this.diagSpeed = this.speed / Math.SQRT2;
         this._dir = {
             right: false,
@@ -61,7 +62,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     dialogLogic() {
-        if (Phaser.Input.Keyboard.JustDown(this.scene.spaceKey) || Phaser.Input.Keyboard.JustDown(this.scene.Ekey)) {
+        if (Phaser.Input.Keyboard.JustDown(this.scene.Ekey)) {
             if (!this._isTalking) {
                 this.dialogStart('intro');
             } else if (this._finishedDialog) {
@@ -106,7 +107,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this._finishedDialog = false;
         this._nextDialog = this.dialogs[index].next;
         this.scene.dialogText.setText(this.dialogs[index].text);
-        animateText(this.scene.dialogText, 50, this.scene.bruh).then(() => {
+        animateText(this.scene.dialogText, 1, this.scene.bruh).then(() => {
         this._finishedDialog = true;
         this.scene.dialogE.show(700, 550);
         });

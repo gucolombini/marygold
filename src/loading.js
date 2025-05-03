@@ -54,6 +54,10 @@ class Loading extends Phaser.Scene {
         frameWidth: 80,
         frameHeight: 80,
       });
+      this.load.spritesheet('carrot', 'src/public/assets/carrot.png', {
+        frameWidth: 36,
+        frameHeight: 51,
+      });
     }
   
     create() {

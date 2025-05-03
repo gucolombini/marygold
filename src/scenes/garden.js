@@ -8,20 +8,41 @@ class Garden extends Phaser.Scene {
     }
 
     create(){
-        this.isPaused = false;
-        this.add.image(400, 300, 'background').setDepth(-10);
         this.music = this.sound.add('garden_calm');
         this.music._interval = Phaser.Math.Between(-10, 10)
         this.music.setLoop(true);
         this.music.setVolume(0.5);
         this.music.play();
         console.log(this.music.currentConfig);
-        // this.arrowkeys = this.input.keyboard.createCursorKeys();
-        this.player = new Player(this, 200, 200);
-        // this.tooltip = new Tooltip(this)
-        // this.tooltip.show(300,300);
+        this.loadLevel(0);
+    }
 
-        this.bruh = this.sound.add('bruh');
+    update(time, delta){
+        // runEvery(this, 10, delta, 'musicPitcher', () => randomMusicPitch(this.music));
+        if (this.isPaused) return;
+        this.player.playerLogic();
+    }
+
+    loadLevel(level) {
+        let background = 'background'
+        if(!this.level) this.level = 0;
+        if(level > 7) {
+            background = 'background2'
+        }
+        this.isPaused = true;
+        this.carrotGoal = 0;
+
+        if(this.bg) this.bg.destroy();
+        if(this.map) this.map.destroy();
+        //if(this.mapSpecial) this.mapSpecial.destroy()
+        this.bg = this.add.image(400, 300, background).setDepth(-10);
+        if(!this.player) this.player = new Player(this, 200, 200);
+        if(!this.bruh) this.bruh = this.sound.add('bruh');
+        if(this.mapElements) {
+            this.mapElements.forEach(obj => {
+                obj.destroy();
+            })
+        }
         this.player.dialogStart('intro')
 
         this.map = this.make.tilemap({ key: 'map_test' });
@@ -37,23 +58,20 @@ class Garden extends Phaser.Scene {
 
         this.mapSpecial.objects.forEach(obj => {
             if (obj.name === 'puddle') {
-              console.log(obj.x, obj.y, obj.properties);
-              this.mapElements.push(new Puddle(this, obj.x, obj.y, this.player));
+                console.log(obj.x, obj.y, obj.properties);
+                this.mapElements.push(new Puddle(this, obj.x, obj.y, this.player));
             } else if (obj.name === 'carrot') {
-              console.log(obj.x, obj.y, obj.properties);
+                this.mapElements.push(new Carrot(this, obj.x, obj.y, this.player));
+                this.carrotGoal++;
+                console.log(this.carrotGoal);
             } else if (obj.name === 'playerspawn') {
                 this.player.setPosition(obj.x, obj.y);
             } 
           });
         this.physics.add.overlap(this.player, this.mapElements, (player, obj) => {
             if (obj.onOverlap) obj.onOverlap();
-        });   
-    }
-
-    update(time, delta){
-        // runEvery(this, 10, delta, 'musicPitcher', () => randomMusicPitch(this.music));
-        if (this.isPaused) return;
-        this.player.playerLogic();
+        });
+        this.isPaused = false;
     }
 }
 
@@ -82,6 +100,7 @@ class Tooltip extends Phaser.GameObjects.Image {
         scene.tweens.add({
             targets: this,
             angle: { from: -10, to: 10 },
+            scale: { from: 1, to: 2},
             duration: 1000,
             yoyo: true,
             repeat: -1, // Infinite loop
@@ -90,8 +109,8 @@ class Tooltip extends Phaser.GameObjects.Image {
 
         scene.tweens.add({
             targets: this,
-            size: { from: 0.2, to: 1.6 },
-            duration: 3000,
+            scale: { from: 0.9, to: 1.2 },
+            duration: 600,
             yoyo: true,
             repeat: -1, // Infinite loop
             ease: 'Sine.easeInOut'
@@ -111,9 +130,7 @@ class Tooltip extends Phaser.GameObjects.Image {
 class Special extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, texture, player) {
         super(scene, x, y, texture);
-        this.scene = scene;
         this.player = player;
-  
         this.scene.add.existing(this);
         this.scene.physics.add.existing(this);
     }
@@ -129,7 +146,7 @@ class Special extends Phaser.Physics.Arcade.Sprite {
         this.scene.physics.add.collider(this.player, this);
         this.setSize(60, 60);
         this.setOrigin(0.5, 0.5);
-        this.setDepth(-1);
+        this.setDepth(-3);
 
         createAnimation(this.scene, 'puddleanim', 'puddle', 0, 1, 2, -1);
         this.play('puddleanim');
@@ -160,20 +177,30 @@ class Special extends Phaser.Physics.Arcade.Sprite {
         scene.physics.add.existing(this.rightSensor, true);
 
         // Set up collisions
-        scene.physics.add.overlap(this.player, this.topSensor, () => {if (this.player._dir.down) this.player.jump('down')});
-        scene.physics.add.overlap(this.player, this.bottomSensor, () => {if (this.player._dir.up) this.player.jump('up')});
-        scene.physics.add.overlap(this.player, this.leftSensor, () => {if (this.player._dir.right) this.player.jump('right')});
-        scene.physics.add.overlap(this.player, this.rightSensor, () => {if (this.player._dir.left) this.player.jump('left')});
+        scene.physics.add.overlap(this.player, this.topSensor, () => {if (this.player._dir.down && Phaser.Input.Keyboard.JustDown(this.scene.spaceKey)) this.player.jump('down')});
+        scene.physics.add.overlap(this.player, this.bottomSensor, () => {if (this.player._dir.up && Phaser.Input.Keyboard.JustDown(this.scene.spaceKey)) this.player.jump('up')});
+        scene.physics.add.overlap(this.player, this.leftSensor, () => {if (this.player._dir.right && Phaser.Input.Keyboard.JustDown(this.scene.spaceKey)) this.player.jump('right')});
+        scene.physics.add.overlap(this.player, this.rightSensor, () => {if (this.player._dir.left && Phaser.Input.Keyboard.JustDown(this.scene.spaceKey)) this.player.jump('left')});
     }
 }
   
 class Carrot extends Special {
     constructor(scene, x, y, player) {
-        super(scene, x, y, 'tooltipE', player);
+        super(scene, x, y, 'carrot', player);
+        createAnimation(this.scene, 'carrotanim', 'carrot', 0, 1, 2, -1);
+        this.play('carrotanim');
+        this.setSize(16, 16);
+        this.setDepth(-2);
     }
   
     onOverlap() {
         this.destroy();
+        this.player.carrots++
+        console.log(this.player.scene.carrotGoal);
+        console.log(this.player.carrots);
+        if(this.player.carrots >= this.player.scene.carrotGoal) {
+            console.log('novo nivel desbloqueado')
+            this.player.scene.level++;
+        }
     }
   }
-  
