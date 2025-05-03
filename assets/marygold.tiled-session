@@ -7,6 +7,28 @@
     "expandedProjectPaths": [
     ],
     "fileStates": {
+        "gardentest - Copia.tmx": {
+            "scale": 1.085375,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 400.3224691926754,
+                "y": 300.81768973856964
+            }
+        },
+        "gardentest - Copia.tmx#tileset_garden": {
+            "scaleInDock": 1
+        },
+        "gardentest.tmx": {
+            "scale": 1.085375,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 400.3224691926754,
+                "y": 300.81768973856964
+            }
+        },
+        "gardentest.tmx#tileset_garden": {
+            "scaleInDock": 1
+        }
     },
     "last.exportedFilePath": "C:/VS_PROJECTS/marygold/src/public/assets/maps",
     "last.imagePath": "C:/VS_PROJECTS/marygold/assets",
@@ -20,6 +42,8 @@
     ],
     "project": "marygold.tiled-project",
     "recentFiles": [
+        "gardentest - Copia.tmx",
+        "gardentest.tmx"
     ],
     "tileset.embedInMap": true,
     "tileset.tileSize": {

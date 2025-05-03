@@ -36,16 +36,17 @@ class Garden extends Phaser.Scene {
         if(this.map) this.map.destroy();
         //if(this.mapSpecial) this.mapSpecial.destroy()
         this.bg = this.add.image(400, 300, background).setDepth(-10);
-        if(!this.player) this.player = new Player(this, 200, 200);
+        if(this.player) this.player.destroy();
         if(!this.bruh) this.bruh = this.sound.add('bruh');
         if(this.mapElements) {
             this.mapElements.forEach(obj => {
                 obj.destroy();
             })
         }
+        this.player = new Player(this, 200, 200);
         this.player.dialogStart('intro')
 
-        this.map = this.make.tilemap({ key: 'map_test' });
+        this.map = this.make.tilemap({ key: 'map_'+level });
         this.tileset = this.map.addTilesetImage('tileset_garden', 'tileset_garden');
 
         this.map.collision = this.map.createLayer('collision', this.tileset, 0, 0);
@@ -182,6 +183,15 @@ class Special extends Phaser.Physics.Arcade.Sprite {
         scene.physics.add.overlap(this.player, this.leftSensor, () => {if (this.player._dir.right && Phaser.Input.Keyboard.JustDown(this.scene.spaceKey)) this.player.jump('right')});
         scene.physics.add.overlap(this.player, this.rightSensor, () => {if (this.player._dir.left && Phaser.Input.Keyboard.JustDown(this.scene.spaceKey)) this.player.jump('left')});
     }
+
+    destroy() {
+        this.topSensor.destroy();
+        this.bottomSensor.destroy();
+        this.leftSensor.destroy();
+        this.rightSensor.destroy();
+        super.destroy();
+    }
+    
 }
   
 class Carrot extends Special {
@@ -201,6 +211,7 @@ class Carrot extends Special {
         if(this.player.carrots >= this.player.scene.carrotGoal) {
             console.log('novo nivel desbloqueado')
             this.player.scene.level++;
+            this.player.scene.loadLevel(this.player.scene.level);
         }
     }
   }

@@ -48,7 +48,8 @@ class Loading extends Phaser.Scene {
       this.load.audio('bruh', 'src/public/assets/audio/blip_mary.ogg');
 
       // mapa tilesets e elementos especiais
-      this.load.tilemapTiledJSON('map_test', 'src/public/assets/maps/gardentest.json');
+      this.load.tilemapTiledJSON('map_0', 'src/public/assets/maps/gardentest.json');
+      this.load.tilemapTiledJSON('map_1', 'src/public/assets/maps/garden1.json');
       this.load.image('tileset_garden', 'src/public/assets/maps/tileset_garden.png');
       this.load.spritesheet('puddle', 'src/public/assets/puddle.png', {
         frameWidth: 80,
