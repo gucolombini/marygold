@@ -5,16 +5,11 @@ class Garden extends Phaser.Scene {
 
     preload(){
         // CRIAR MÉTODO PARA PRELOAD
-        this.load.image('background', 'src/public/assets/bg.png');
-        this.load.audio('garden_calm', 'src/public/assets/garden_calm.ogg');
-        this.load.glsl('bundle', 'src/shaders/bundle.glsl.js');
-        this.load.image('marygold', 'src/public/assets/marystatic.png');
-        this.load.image('tooltip_e', 'src/public/assets/tooltipE.png');
     }
 
     create(){
         this.isPaused = false;
-        this.add.image(400, 300, 'background');
+        this.add.image(400, 300, 'background').setDepth(-1);
         this.music = this.sound.add('garden_calm');
         this.music._interval = Phaser.Math.Between(-10, 10)
         this.music.setLoop(true);
@@ -23,12 +18,18 @@ class Garden extends Phaser.Scene {
         console.log(this.music.currentConfig);
         this.arrowkeys = this.input.keyboard.createCursorKeys();
         this.player = new Player(this, 200, 200);
+        this.tooltip = new Tooltip(this)
+        this.tooltip.show(300,300);
+
+        this.bruh = this.sound.add('bruh');
+        this.player.dialogStart('intro')
     }
 
-    update(){
-        runEvery(this, 10, 'musicPitcher', () => randomMusicPitch(this.music));
+    update(time, delta){
+        // runEvery(this, 10, delta, 'musicPitcher', () => randomMusicPitch(this.music));
+        // this.player.dialogInput('oi', 'oi');
         if (this.isPaused) return;
-        this.player.moveLogic();
+        this.player.playerLogic();
     }
 }
 
@@ -42,8 +43,43 @@ function randomMusicPitch(music) {
         music.setRate(music.rate*1.01);
         music._interval++;
     }
-    console.log(music.rate);
     if (music._interval < 0.5 && music._interval > -0.5) {
         music._interval = Phaser.Math.Between(-10, 10);
     };
+}
+
+class Tooltip extends Phaser.GameObjects.Image {
+    constructor(scene) {
+        super(scene, 0, 0, 'tooltip_e');
+        this.setVisible(false);
+        this.setDepth(2); // Ensure it shows on top
+        scene.add.existing(this);
+
+        scene.tweens.add({
+            targets: this,
+            angle: { from: -10, to: 10 },
+            duration: 1000,
+            yoyo: true,
+            repeat: -1, // Infinite loop
+            ease: 'Sine.easeInOut'
+        });
+
+        scene.tweens.add({
+            targets: this,
+            size: { from: 0.2, to: 1.6 },
+            duration: 3000,
+            yoyo: true,
+            repeat: -1, // Infinite loop
+            ease: 'Sine.easeInOut'
+        });
+    }
+
+    show(x, y) {
+        this.setPosition(x, y);
+        this.setVisible(true);
+    }
+
+    hide() {
+        this.setVisible(false);
+    }
 }

@@ -13,6 +13,7 @@ var config = {
   scale: { mode: Phaser.Scale.FIT }, //Dimensiona o conteúdo para que ele preencha a tela inteira, mantendo sua proporção
   backgroundColor: "#272036", //define a cor de fundo
   pixelArt: true,
+  roundPixels: true,
   //Adicionando as classes/cenas do jogo, conforme a ordem do gameflow
   physics: {
     //ativando a fisica do jogo
@@ -26,7 +27,7 @@ var config = {
     mode: Phaser.Scale.NONE, // No automatic scaling
     autoCenter: Phaser.Scale.NO_CENTER // Optional: don’t auto center
   },
-  scene: [Garden],
+  scene: [Loading, Garden],
 };
 
 // Instanciando o phaser
@@ -168,7 +169,7 @@ function Unload(scene, data)
 }
 
 // Função que roda toda vez a cada intervalo no update
-function runEvery(scene, interval, key, callback) {
+function runEvery(scene, interval, delta, key, callback) {
   if (!scene._timers) scene._timers = {};
   if (!scene._timers[key]) scene._timers[key] = 0;
 
@@ -178,4 +179,50 @@ function runEvery(scene, interval, key, callback) {
       callback();
       scene._timers[key] = 0;
   }
+}
+
+/**
+ * Create typewriter animation for text
+ * @param {Phaser.GameObjects.Text} target
+ * @param {number} [speedInMs=25]
+ * @returns {Promise<void>}
+ */
+function animateText(target, speedInMs = 25, sound) {
+  // store original text
+  const message = target.text;
+  const invisibleMessage = message.replace(/[^ ]/g, " ");
+
+  // clear text on screen
+  target.text = "";
+
+  // mutable state for visible text
+  let visibleText = "";
+
+  // use a Promise to wait for the animation to complete
+  return new Promise((resolve) => {
+    const timer = target.scene.time.addEvent({
+      delay: speedInMs,
+      loop: true,
+      callback() {
+        // if all characters are visible, stop the timer
+        if (target.text === message) {
+          timer.destroy();
+          return resolve();
+        }
+
+        // add next character to visible text
+        rate = Phaser.Math.Between(8, 12)/10
+        sound.setRate(rate)
+        sound.play();
+
+        visibleText += message[visibleText.length];
+
+        // right pad with invisibleText
+        const invisibleText = invisibleMessage.substring(visibleText.length);
+
+        // update text on screen
+        target.text = visibleText + invisibleText;
+      },
+    });
+  });
 }
