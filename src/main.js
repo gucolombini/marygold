@@ -20,7 +20,7 @@ var config = {
     default: "arcade", //fisicas tipo arcade
     arcade: {
       gravity: { y: 0 }, //Retirando a gravidade do jogo
-      debug: true, //ativa o modo de debug/depuracao
+      debug: false, //ativa o modo de debug/depuracao
     },
   },
   scale: {
@@ -90,6 +90,8 @@ function createAnimation(
   frameRate,
   repeat
 ) {
+  if (scene.anims.exists(animationName)) return;
+
   scene.anims.create({
     //cria a animacao
     key: animationName, //nome da animacao
@@ -211,9 +213,11 @@ function animateText(target, speedInMs = 25, sound) {
         }
 
         // add next character to visible text
-        rate = Phaser.Math.Between(8, 12)/10
-        sound.setRate(rate)
-        sound.play();
+        if (message[visibleText.length] != " " && message[visibleText.length] != "!" && message[visibleText.length] != "?" && message[visibleText.length] != "." && message[visibleText.length] != ",") {
+          rate = Phaser.Math.Between(8, 12)/10
+          sound.setRate(rate)
+          sound.play();
+        }
 
         visibleText += message[visibleText.length];
 

@@ -1,11 +1,11 @@
 class Player extends Phaser.Physics.Arcade.Sprite {
-    constructor(scene, x, y, collisions = []) {
+    constructor(scene, x, y) {
         super (scene, x, y, 'marygold')
         this.scene.add.existing(this)
         this.scene.physics.add.existing(this)
         this.body.collideWorldBounds = true;
-        this.setSize(64, 32);
-        this.body.setOffset(0, 70);
+        this.setSize(50, 32);
+        this.body.setOffset(7, 70);
         this.speed = 200;
         this.diagSpeed = this.speed / Math.SQRT2;
         this._dir = {
@@ -16,8 +16,10 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         };
         this._tooltip = false;
         this._isTalking = false;
-        if (!this.scene.arrowkeys) this.input.keyboard.createCursorKeys();
+        this._isJumping = false;
+        if (!this.scene.arrowkeys) this.scene.arrowkeys = this.scene.input.keyboard.createCursorKeys();
         if (!this.scene.spaceKey) this.scene.spaceKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        if (!this.scene.Ekey) this.scene.Ekey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
 
         this.dialogs = {
             error:   { next: null, speaker: "mary_cursed", text: "ERRO! Este diálogo vai se autodestruir!" },
@@ -28,7 +30,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
     } 
     moveLogic() {
-        if (this._isTalking) return;
+        if (this._isTalking || this._isJumping) return;
 
         // console.log(this.x, this.y);
         const keys = this.scene.arrowkeys;
@@ -59,7 +61,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     dialogLogic() {
-        if (Phaser.Input.Keyboard.JustDown(this.scene.spaceKey)) {
+        if (Phaser.Input.Keyboard.JustDown(this.scene.spaceKey) || Phaser.Input.Keyboard.JustDown(this.scene.Ekey)) {
             if (!this._isTalking) {
                 this.dialogStart('intro');
             } else if (this._finishedDialog) {
@@ -81,6 +83,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.setVelocity(0, 0);
         if (!this.scene.dialogBox) this.scene.dialogBox = this.scene.add.image(400, 500, 'dialogbox');
+        if (!this.scene.dialogE) this.scene.dialogE = new Tooltip(this.scene, 700, 550);
+        this.scene.dialogE.setDepth(5).hide();
         if (!this.scene.dialogText) this.scene.dialogText = this.scene.add.text(215, 480, 'DUMMYTEXT',
             {
                 fontSize: '20px',
@@ -104,6 +108,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.scene.dialogText.setText(this.dialogs[index].text);
         animateText(this.scene.dialogText, 50, this.scene.bruh).then(() => {
         this._finishedDialog = true;
+        this.scene.dialogE.show(700, 550);
         });
     }
 
@@ -112,7 +117,46 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.scene.dialogBox.setVisible(false);
         this.scene.dialogText.setVisible(false);
         this.scene.dialogPortrait.destroy();
+        this.scene.dialogE.hide();
         this._isTalking = false;
+    }
+
+    jump(dir) {
+        if (this._isJumping) return;
+        this._isJumping = true;
+        this.setVelocity(0, 0);
+
+        let goal = [this.x, this.y];
+        switch (dir) {
+            case 'up':
+                goal[1] -= 85 + this.body.halfHeight
+                break;
+            case 'down':
+                goal[1] += 85 + this.body.halfHeight
+                break;
+            case 'left':
+                goal[0] -= 85 + this.body.halfWidth
+                break;
+            case 'right':
+                goal[0] += 85 + this.body.halfWidth
+                break;
+            default:
+                break;
+        }
+
+        this.scene.tweens.add({
+            targets: this,
+            x: { from: this.x, to: goal[0]},
+            y: { from: this.y, to: goal[1]},
+            duration: 600,
+            yoyo: false,
+            repeat: 0, // Infinite loop
+            ease: 'Sine.easeInOut',
+            easeParams: [3.5],
+            onComplete: () => {
+                this._isJumping = false;
+            }
+        });
     }
 
     playerLogic() {
