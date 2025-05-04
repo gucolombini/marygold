@@ -44,7 +44,11 @@ class Garden extends Phaser.Scene {
             })
         }
         this.player = new Player(this, 200, 200);
-        this.player.dialogStart('intro')
+        this.player.dialogStart('intro'+(level+1))
+
+        //this.cameras.addExisting(this.cameras.main); // Adiciona a câmera principal à cena (o jogo automaticamente acompanhará ela)
+        //this.cameras.main.startFollow(this.player);
+        //this.cameras.main.setDeadzone(200, 100);
 
         this.map = this.make.tilemap({ key: 'map_'+level });
         this.tileset = this.map.addTilesetImage('tileset_garden', 'tileset_garden');
@@ -144,9 +148,9 @@ class Special extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, player) {
         super(scene, x, y, 'puddle', player);
         this.setImmovable(true);
+        //this.setOrigin(0.5, 0.5);
         this.scene.physics.add.collider(this.player, this);
         this.setSize(60, 60);
-        this.setOrigin(0.5, 0.5);
         this.setDepth(-3);
 
         createAnimation(this.scene, 'puddleanim', 'puddle', 0, 1, 2, -1);

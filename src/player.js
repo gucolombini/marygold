@@ -1,14 +1,15 @@
 class Player extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y) {
-        super (scene, x, y, 'marygold')
+        super (scene, x, y, 'mary')
         this.scene.add.existing(this)
         this.scene.physics.add.existing(this)
         this.body.collideWorldBounds = true;
-        this.setSize(50, 32);
-        this.body.setOffset(7, 70);
+        this.setSize(49, 32);
+        this.body.setOffset(28, 79);
         this.speed = 200;
         this.carrots = 0;
         this.diagSpeed = this.speed / Math.SQRT2;
+        this.animState = 'idledown'
         this._dir = {
             right: false,
             left: false,
@@ -22,11 +23,20 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         if (!this.scene.spaceKey) this.scene.spaceKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         if (!this.scene.Ekey) this.scene.Ekey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
 
+        createAnimation(this.scene, 'maryidledown', 'mary', 1, 1, -1, 0);
+        createAnimation(this.scene, 'marywalkdown', 'mary', 0, 2, 4, -1, true);
+        createAnimation(this.scene, 'maryidleup', 'mary', 4, 4, -1, 0);
+        createAnimation(this.scene, 'marywalkup', 'mary', 3, 5, 4, -1, true);
+        createAnimation(this.scene, 'maryidleright', 'mary', 7, 7, -1, 0);
+        createAnimation(this.scene, 'marywalkright', 'mary', 6, 8, 4, -1, true);
+        this.play('maryidledown');
+
         this.dialogs = {
             error:   { next: null, speaker: "mary_cursed", text: "ERRO! Este diálogo vai se autodestruir!" },
-            intro:   { next: "intro1", speaker: "mary", text: "Olá! Eu sou Marygold, mas pode me chamar de Mary!" },
-            intro1:  { next: "intro2", speaker: "mary", text: "Estou precisando de algumas cenourinhas para fazer um bolo de cenoura muito gostoso..." },
-            intro2:  { next: null,    speaker: "mary", text: "Para isso, preciso dar um passeio na minha horta de cenouras! Você poderia me ajudar a colher?" },
+            intro1:   { next: "intro1_1", speaker: "mary", text: "Olá! Eu sou Marygold, mas pode me chamar de Mary!" },
+            intro1_1:  { next: "intro1_2", speaker: "mary", text: "Estou precisando de algumas cenourinhas para fazer um bolo de cenoura muito gostoso..." },
+            intro1_2:  { next: null,    speaker: "mary", text: "Para isso, preciso dar um passeio na minha horta de cenouras! Você poderia me ajudar a colher?" },
+            intro2:   { next: null, speaker: "mary_cursed", text: "Caguei meu cu." },
           }; 
 
     } 
@@ -58,6 +68,35 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             vy *= this.speed;
         }
 
+        if (vx == 0 && vy == 0) {
+            if (this.animState === 'walkright') {
+                this.animState = 'idleright'
+            }
+            if (this.animState === 'walkup') {
+                this.animState = 'idleup'
+            }
+            if (this.animState === 'walkdown') {
+                this.animState = 'idledown'
+            }
+        }
+        else if (vx > 0) {
+            this.animState = 'walkright';
+            this.setFlipX(false);
+        }
+        else if (vx < 0) {
+            this.animState = 'walkright';
+            this.setFlipX(true);
+        }
+        else if (vy > 0) {
+            this.animState = 'walkdown';
+            this.setFlipX(false);
+        }
+        else if (vy < 0) {
+            this.animState = 'walkup';
+            this.setFlipX(false);
+        }
+        console.log(this.animState);
+        this.anims.play('mary'+this.animState, true);
         this.setVelocity(vx, vy);
     }
 
@@ -85,7 +124,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.setVelocity(0, 0);
         if (!this.scene.dialogBox) this.scene.dialogBox = this.scene.add.image(400, 500, 'dialogbox');
         if (!this.scene.dialogE) this.scene.dialogE = new Tooltip(this.scene, 700, 550);
-        this.scene.dialogE.setDepth(5).hide();
+        this.scene.dialogE.setDepth(5).setScrollFactor(0,0).hide();
         if (!this.scene.dialogText) this.scene.dialogText = this.scene.add.text(215, 480, 'DUMMYTEXT',
             {
                 fontSize: '20px',
@@ -95,9 +134,12 @@ class Player extends Phaser.Physics.Arcade.Sprite {
                 align: 'left',
             }
         );
+        this.scene.dialogBox.setScrollFactor(0,0);
+        this.scene.dialogText.setScrollFactor(0,0);
 
         if (this.scene.dialogPortrait) this.scene.dialogPortrait.destroy();
         this.scene.dialogPortrait = this.scene.add.image(135, 463, 'portrait_' + this.dialogs[index].speaker);
+        this.scene.dialogPortrait.setScrollFactor(0,0);
 
         this.scene.dialogBox.setVisible(true).setDepth(3);
         this.scene.dialogText.setVisible(true).setDepth(4);
@@ -131,15 +173,21 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         switch (dir) {
             case 'up':
                 goal[1] -= 85 + this.body.halfHeight
+                this.anims.play('maryidleup');
                 break;
             case 'down':
                 goal[1] += 85 + this.body.halfHeight
+                this.anims.play('maryidledown');
                 break;
             case 'left':
                 goal[0] -= 85 + this.body.halfWidth
+                this.anims.play('maryidleright');
+                this.setFlipX(true);
                 break;
             case 'right':
                 goal[0] += 85 + this.body.halfWidth
+                this.anims.play('maryidleright');
+                this.setFlipX(false);
                 break;
             default:
                 break;

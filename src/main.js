@@ -83,15 +83,16 @@ function moveChar(scene, speedX, speedY, character) {
 // Função para criar animações
 function createAnimation(
   scene,
-  animationName,
-  spritesheet,
-  start,
-  end,
-  frameRate,
-  repeat
+  animationName = String,
+  spritesheet = String,
+  start = Number,
+  end = Number,
+  frameRate = Number,
+  repeat = Number,
+  yoyo = Boolean
 ) {
   if (scene.anims.exists(animationName)) return;
-
+  if (!yoyo) yoyo = false;
   scene.anims.create({
     //cria a animacao
     key: animationName, //nome da animacao
@@ -102,6 +103,7 @@ function createAnimation(
     }),
     frameRate: frameRate, //velocidade da animacao
     repeat: repeat, //Quantas vezes a cena repete (OBS: para repitir infinitamente, usar -1)
+    yoyo: yoyo,
   });
 }
 

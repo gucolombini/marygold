@@ -36,7 +36,7 @@
  </layer>
  <objectgroup id="4" name="special">
   <object id="10" name="puddle" gid="4" x="100" y="500" width="25" height="25"/>
-  <object id="11" name="puddle" gid="4" x="350" y="375" width="25" height="25"/>
+  <object id="11" name="puddle" gid="4" x="600" y="325" width="25" height="25"/>
   <object id="19" name="carrot" gid="3" x="380" y="209" width="25" height="25"/>
   <object id="20" name="carrot" gid="3" x="500" y="175" width="25" height="25"/>
   <object id="21" name="carrot" gid="3" x="525" y="175" width="25" height="25"/>

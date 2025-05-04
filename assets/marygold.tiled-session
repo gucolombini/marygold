@@ -7,6 +7,28 @@
     "expandedProjectPaths": [
     ],
     "fileStates": {
+        "garden1.tmx": {
+            "scale": 1.085375,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 400.3224691926754,
+                "y": 300.81768973856964
+            }
+        },
+        "garden1.tmx#tileset_garden": {
+            "scaleInDock": 1
+        },
+        "gardenDUMMY.tmx": {
+            "scale": 3,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 359.16666666666663,
+                "y": 275.8333333333333
+            }
+        },
+        "gardenDUMMY.tmx#tileset_garden": {
+            "scaleInDock": 1
+        },
         "gardentest - Copia.tmx": {
             "scale": 1.085375,
             "selectedLayer": 0,
@@ -20,10 +42,10 @@
         },
         "gardentest.tmx": {
             "scale": 1.085375,
-            "selectedLayer": 0,
+            "selectedLayer": 2,
             "viewCenter": {
                 "x": 400.3224691926754,
-                "y": 300.81768973856964
+                "y": 299.8963491880686
             }
         },
         "gardentest.tmx#tileset_garden": {
@@ -42,6 +64,7 @@
     ],
     "project": "marygold.tiled-project",
     "recentFiles": [
+        "garden1.tmx",
         "gardentest - Copia.tmx",
         "gardentest.tmx"
     ],

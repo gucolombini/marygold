@@ -35,7 +35,7 @@ class Loading extends Phaser.Scene {
   
       this.load.image('background', 'src/public/assets/bg.png');
       this.load.audio('garden_calm', 'src/public/assets/garden_calm.ogg');
-      this.load.image('marygold', 'src/public/assets/marystatic.png');
+      this.load.image('marystatic', 'src/public/assets/marystatic.png');
       this.load.image('tooltip_e', 'src/public/assets/tooltipE.png');
       this.load.image('dialogbox', 'src/public/assets/dialogbox.png');
   
@@ -46,6 +46,11 @@ class Loading extends Phaser.Scene {
       this.load.image('portrait_mary_hole', 'src/public/assets/portraits/portrait_mary_hole.png');
   
       this.load.audio('bruh', 'src/public/assets/audio/blip_mary.ogg');
+
+      this.load.spritesheet('mary', 'src/public/assets/mary.png', {
+        frameWidth: 104,
+        frameHeight: 119,
+      });
 
       // mapa tilesets e elementos especiais
       this.load.tilemapTiledJSON('map_0', 'src/public/assets/maps/gardentest.json');
