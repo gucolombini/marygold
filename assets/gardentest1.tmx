@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="32" height="24" tilewidth="25" tileheight="25" infinite="0" nextlayerid="5" nextobjectid="34">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="32" height="24" tilewidth="25" tileheight="25" infinite="0" nextlayerid="5" nextobjectid="31">
  <editorsettings>
-  <export target="../src/public/assets/maps/gardentest.json" format="json"/>
+  <export target="../src/public/assets/maps/garden1.json" format="json"/>
  </editorsettings>
- <tileset firstgid="1" name="tileset_garden" tilewidth="25" tileheight="25" tilecount="6" columns="2">
-  <image source="tiled_tileset.png" width="50" height="75"/>
+ <tileset firstgid="1" name="tileset_garden" tilewidth="25" tileheight="25" tilecount="4" columns="2">
+  <image source="tiled_tileset.png" width="50" height="50"/>
  </tileset>
  <layer id="1" name="collision" width="32" height="24">
   <data encoding="csv">
-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,2,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,
-0,0,0,2,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,
-0,0,0,2,0,0,0,0,2,1,1,1,1,1,0,0,0,0,0,0,0,1,1,1,1,2,1,1,0,0,0,0,
-0,0,0,2,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,
-0,0,0,2,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,
-0,0,0,2,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+2,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,
+2,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,
+2,0,0,0,0,2,1,1,1,1,1,0,0,0,0,0,0,0,1,1,1,1,2,1,1,0,0,0,0,0,0,0,
+2,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,
+2,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,
+2,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -35,22 +35,19 @@
 </data>
  </layer>
  <objectgroup id="4" name="special">
-  <object id="10" name="puddle" gid="4" x="100" y="500" width="25" height="25"/>
-  <object id="11" name="puddle" gid="4" x="600" y="325" width="25" height="25"/>
-  <object id="19" name="carrot" gid="3" x="380" y="209" width="25" height="25"/>
-  <object id="20" name="carrot" gid="3" x="500" y="175" width="25" height="25"/>
-  <object id="21" name="carrot" gid="3" x="525" y="175" width="25" height="25"/>
-  <object id="22" name="carrot" gid="3" x="550" y="175" width="25" height="25"/>
-  <object id="23" name="carrot" gid="3" x="575" y="175" width="25" height="25"/>
-  <object id="24" name="carrot" gid="3" x="680.167" y="203.5" width="25" height="25"/>
-  <object id="25" name="carrot" gid="3" x="692.167" y="188.167" width="25" height="25"/>
-  <object id="26" name="carrot" gid="3" x="706.833" y="206.167" width="25" height="25"/>
-  <object id="27" name="carrot" gid="3" x="716.167" y="179.5" width="25" height="25"/>
-  <object id="29" name="playerspawn" gid="2" x="510" y="79" width="25" height="25"/>
-  <object id="30" name="puddle" gid="4" x="350" y="450" width="25" height="25"/>
-  <object id="31" name="buriedcarrot" gid="5" x="379.07" y="358.8" width="25" height="25"/>
-  <object id="32" name="buriedcarrot" gid="5" x="529.248" y="467.518" width="25" height="25"/>
-  <object id="33" name="buriedcarrot" gid="5" x="650.865" y="464.754" width="25" height="25"/>
+  <object id="10" name="puddle" gid="4" x="313.751" y="497.236" width="25" height="25"/>
+  <object id="11" name="puddle" gid="4" x="606.133" y="483.718" width="25" height="25"/>
+  <object id="19" name="carrot" gid="3" x="40.0253" y="294.685" width="25" height="25"/>
+  <object id="20" name="carrot" gid="3" x="160.025" y="260.685" width="25" height="25"/>
+  <object id="21" name="carrot" gid="3" x="185.025" y="260.685" width="25" height="25"/>
+  <object id="22" name="carrot" gid="3" x="210.025" y="260.685" width="25" height="25"/>
+  <object id="23" name="carrot" gid="3" x="235.025" y="260.685" width="25" height="25"/>
+  <object id="24" name="carrot" gid="3" x="340.192" y="289.185" width="25" height="25"/>
+  <object id="25" name="carrot" gid="3" x="352.192" y="273.852" width="25" height="25"/>
+  <object id="26" name="carrot" gid="3" x="366.858" y="291.852" width="25" height="25"/>
+  <object id="27" name="carrot" gid="3" x="376.192" y="265.185" width="25" height="25"/>
+  <object id="29" name="playerspawn" gid="2" x="176.475" y="120.46" width="25" height="25"/>
+  <object id="30" name="puddle" gid="4" x="720.379" y="381.821" width="25" height="25"/>
  </objectgroup>
  <layer id="2" name="puddles" width="32" height="24" visible="0">
   <data encoding="csv">

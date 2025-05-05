@@ -12,18 +12,87 @@
             "selectedLayer": 1,
             "viewCenter": {
                 "x": 400.3224691926754,
-                "y": 300.81768973856964
+                "y": 299.8963491880686
             }
         },
         "garden1.tmx#tileset_garden": {
             "scaleInDock": 1
         },
+        "garden2.tmx": {
+            "scale": 1.085375,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 400.3224691926754,
+                "y": 300.81768973856964
+            }
+        },
+        "garden2.tmx#tileset_garden": {
+            "scaleInDock": 1
+        },
+        "garden3.tmx": {
+            "scale": 1.085375,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 400.3224691926754,
+                "y": 300.81768973856964
+            }
+        },
+        "garden3.tmx#tileset_garden": {
+            "scaleInDock": 1
+        },
+        "garden4.tmx": {
+            "scale": 1.085375,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 400.3224691926754,
+                "y": 299.8963491880686
+            }
+        },
+        "garden4.tmx#tileset_garden": {
+            "scaleInDock": 1
+        },
+        "garden5.tmx": {
+            "scale": 1.085375,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 400.3224691926754,
+                "y": 299.8963491880686
+            }
+        },
+        "garden5.tmx#tileset_garden": {
+            "scaleInDock": 1
+        },
+        "garden6.tmx": {
+            "scale": 1.085375,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 400.3224691926754,
+                "y": 299.8963491880686
+            }
+        },
+        "garden6.tmx#tileset_garden": {
+            "scaleInDock": 1
+        },
+        "garden7.tmx": {
+            "scale": 1.085375,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 400.3224691926754,
+                "y": 300.81768973856964
+            }
+        },
+        "garden7.tmx#tileset_garden": {
+            "scaleInDock": 1
+        },
         "gardenDUMMY.tmx": {
-            "scale": 3,
+            "expandedObjectLayers": [
+                4
+            ],
+            "scale": 1.5,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 359.16666666666663,
-                "y": 275.8333333333333
+                "x": 267,
+                "y": 214.99999999999997
             }
         },
         "gardenDUMMY.tmx#tileset_garden": {
@@ -41,6 +110,9 @@
             "scaleInDock": 1
         },
         "gardentest.tmx": {
+            "expandedObjectLayers": [
+                4
+            ],
             "scale": 1.085375,
             "selectedLayer": 2,
             "viewCenter": {
@@ -64,6 +136,10 @@
     ],
     "project": "marygold.tiled-project",
     "recentFiles": [
+        "garden7.tmx",
+        "garden6.tmx",
+        "garden5.tmx",
+        "garden4.tmx",
         "garden1.tmx",
         "gardentest - Copia.tmx",
         "gardentest.tmx"

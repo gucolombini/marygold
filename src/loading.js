@@ -38,6 +38,7 @@ class Loading extends Phaser.Scene {
       this.load.image('marystatic', 'src/public/assets/marystatic.png');
       this.load.image('tooltip_e', 'src/public/assets/tooltipE.png');
       this.load.image('dialogbox', 'src/public/assets/dialogbox.png');
+      this.load.image('fence', 'src/public/assets/fence.png');
   
       this.load.image('portrait_mary', 'src/public/assets/portraits/portrait_mary.png');
       this.load.image('portrait_mary_worried', 'src/public/assets/portraits/portrait_mary_worried.png');
@@ -54,7 +55,9 @@ class Loading extends Phaser.Scene {
 
       // mapa tilesets e elementos especiais
       this.load.tilemapTiledJSON('map_0', 'src/public/assets/maps/gardentest.json');
-      this.load.tilemapTiledJSON('map_1', 'src/public/assets/maps/garden1.json');
+      for (let i = 1; i < 8; i++) {
+        this.load.tilemapTiledJSON('map_'+i, 'src/public/assets/maps/garden'+i+'.json');
+      }
       this.load.image('tileset_garden', 'src/public/assets/maps/tileset_garden.png');
       this.load.spritesheet('puddle', 'src/public/assets/puddle.png', {
         frameWidth: 80,
@@ -63,6 +66,10 @@ class Loading extends Phaser.Scene {
       this.load.spritesheet('carrot', 'src/public/assets/carrot.png', {
         frameWidth: 36,
         frameHeight: 51,
+      });
+      this.load.spritesheet('buriedcarrot', 'src/public/assets/carrotburied.png', {
+        frameWidth: 29,
+        frameHeight: 24,
       });
     }
   

@@ -29,6 +29,10 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         createAnimation(this.scene, 'marywalkup', 'mary', 3, 5, 4, -1, true);
         createAnimation(this.scene, 'maryidleright', 'mary', 7, 7, -1, 0);
         createAnimation(this.scene, 'marywalkright', 'mary', 6, 8, 4, -1, true);
+        createAnimation(this.scene, 'marywaterdown', 'mary', 9, 10, 3, -1);
+        createAnimation(this.scene, 'marywaterright', 'mary', 11, 12, 3, -1);
+        createAnimation(this.scene, 'marywaterup', 'mary', 13, 14, 3, -1);
+
         this.play('maryidledown');
 
         this.dialogs = {
@@ -41,7 +45,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
     } 
     moveLogic() {
-        if (this._isTalking || this._isJumping) return;
+        if (this._isTalking || this._isJumping || this._isWatering) return;
 
         // console.log(this.x, this.y);
         const keys = this.scene.arrowkeys;
@@ -103,7 +107,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     dialogLogic() {
         if (Phaser.Input.Keyboard.JustDown(this.scene.Ekey)) {
             if (!this._isTalking) {
-                this.dialogStart('intro');
+                //this.dialogStart('intro');
             } else if (this._finishedDialog) {
                 if (this._nextDialog) {
                     this.dialogStart(this._nextDialog)
@@ -206,6 +210,27 @@ class Player extends Phaser.Physics.Arcade.Sprite {
                 this._isJumping = false;
             }
         });
+    }
+
+    water(dir) {
+        this._isWatering = true;
+        this.scene.time.delayedCall(1000, () => {this._isWatering = false;})
+        switch (dir) {
+            case "up":
+                this.anims.play("marywaterup");
+                break;
+            case "left":
+                this.anims.play("marywaterright");
+                this.setFlipX(true);
+                break;
+            case "right":
+                this.anims.play("marywaterright");
+                this.setFlipX(false);
+                break;
+            default:
+                this.anims.play("marywaterdown");
+                break;
+        }
     }
 
     playerLogic() {
