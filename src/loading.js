@@ -56,7 +56,7 @@ class Loading extends Phaser.Scene {
       });
 
       // mapa tilesets e elementos especiais
-      for (let i = 0; i < 8; i++) {
+      for (let i = 0; i < 16; i++) {
         this.load.tilemapTiledJSON('map_'+i, 'src/public/assets/maps/garden'+i+'.json');
       }
       for (let i = 1; i < 4; i++) {

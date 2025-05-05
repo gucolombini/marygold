@@ -394,7 +394,7 @@ class Powerup extends Special {
                 }, function(){
                     scene.music.setRate(0.98);
                     scene.music.play();
-                    scene.loadLevel(3);
+                    scene.loadLevel(8);
                 })
             })
         } else this.destroy();
