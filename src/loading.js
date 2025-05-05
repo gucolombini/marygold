@@ -34,6 +34,9 @@ class Loading extends Phaser.Scene {
       });
       this.load.image('background0', 'src/public/assets/bg0.png');
       this.load.image('background', 'src/public/assets/bg.png');
+      this.load.image('floor', 'src/public/assets/floor.png');
+      this.load.image('sky', 'src/public/assets/sky.png');
+      this.load.image('trees', 'src/public/assets/trees.png');
       this.load.audio('garden_calm', 'src/public/assets/garden_calm.ogg');
       this.load.image('marystatic', 'src/public/assets/marystatic.png');
       this.load.image('tooltip_e', 'src/public/assets/tooltipE.png');
@@ -78,6 +81,10 @@ class Loading extends Phaser.Scene {
       this.load.spritesheet('powerup', 'src/public/assets/powerup.png', {
         frameWidth: 64,
         frameHeight: 59,
+      });
+      this.load.spritesheet('shine', 'src/public/assets/shine.png', {
+        frameWidth: 80,
+        frameHeight: 80,
       });
     }
   

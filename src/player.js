@@ -44,9 +44,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             intro0:   { next: "intro0_1", speaker: "mary", text: "Olá! Eu sou Marygold, mas pode me chamar de Mary!" },
             intro0_1:  { next: "intro0_2", speaker: "mary", text: "Estou precisando de algumas cenourinhas para fazer um bolo de cenoura muito gostoso..." },
             intro0_2:  { next: null, end:"nextlevel", speaker: "mary", text: "Para isso, preciso dar um passeio na minha horta de cenouras! Você poderia me ajudar a colher?" },
-            intro1:   { next: null, speaker: "mary", text: "dialogo fase 2" },
             power1:  { next: "power1_1", speaker: "mary", text: "Que legal, agora eu posso pular por cima de poças de água!" },
-            power1_1:  { next: null, end:"nextlevel", speaker: "exclamation", blip: "silent", text: "Pressione Espaço para pular!"},
+            power1_1:  { next: null, end:"nextlevel", speaker: "exclamation", blip: "silent", text: "Pressione ESPAÇO para pular!"},
             power2:  { next: "power2_1", speaker: "mary", text: "Finalmente achei meu regador! Posso regar as cenourinhas que estão plantadas!" },
             power2_1:  { next: null, end:"nextlevel", speaker: "exclamation", blip: "silent", text: "Pressione E para regar!"},
           }; 
@@ -81,15 +80,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         }
 
         if (vx == 0 && vy == 0) {
-            if (this.animState === 'walkright') {
-                this.animState = 'idleright'
-            }
-            if (this.animState === 'walkup') {
-                this.animState = 'idleup'
-            }
-            if (this.animState === 'walkdown') {
-                this.animState = 'idledown'
-            }
+            this.idle();
         }
         else if (vx > 0) {
             this.animState = 'walkright';
@@ -133,6 +124,9 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         }
 
         this.setVelocity(0, 0);
+        this.idle();
+        this.anims.play('mary'+this.animState);
+
         this.dialogIndex = index;
         if (!this.scene.dialogBox) this.scene.dialogBox = this.scene.add.image(400, 500, 'dialogbox');
         if (!this.scene.dialogE) this.scene.dialogE = new Tooltip(this.scene, "e");
@@ -252,6 +246,18 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             default:
                 this.anims.play("marywaterdown");
                 break;
+        }
+    }
+
+    idle() {
+        if (this.animState === 'walkright') {
+            this.animState = 'idleright'
+        }
+        if (this.animState === 'walkup') {
+            this.animState = 'idleup'
+        }
+        if (this.animState === 'walkdown') {
+            this.animState = 'idledown'
         }
     }
 

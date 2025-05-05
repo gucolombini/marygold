@@ -22,7 +22,19 @@ class Garden extends Phaser.Scene {
     update(time, delta){
         // runEvery(this, 10, delta, 'musicPitcher', () => randomMusicPitch(this.music));
         if (this.isPaused) return;
+        this.skyLogic(delta);
         this.player.playerLogic();
+    }
+
+    skyLogic(delta) {
+        if (this.level > 7) delta *= (this.level-7)*2;
+        if (this.sky) {
+            this.sky.setPosition(this.sky.x-delta/100, 0);
+            if (this.sky.x < -800) {
+                this.sky.setPosition(0, 0);
+            }
+
+        }
     }
 
     transitionLevel(level) {
@@ -41,22 +53,23 @@ class Garden extends Phaser.Scene {
     }
 
     loadLevel(level, fade) {
-        let background = 'background'
+        // let background = 'background'
         this.level = level;
-        if(level === 0) {
-            background = 'background0'
-        }
-        if(level > 7) {
-            background = 'background2'
-        }
+
         this.isPaused = true;
         this.carrotGoal = 0;
         if (fade && fade === true) this.cameras.main.fadeIn(1000, 0, 0, 0);
 
-        if(this.bg) this.bg.destroy();
-        if(this.map) this.map.destroy();
+        if(level == 0) this.bg = this.add.image(400, 300, "background0");
+        else if (this.bg) this.bg.destroy();
+
+        if(this.floor) this.floor.destroy();
+        if(this.trees) this.trees.destroy();
+        if(!this.sky) this.sky = this.add.image(0, 0, "sky").setDepth(-9).setOrigin(0, 0);
         //if(this.mapSpecial) this.mapSpecial.destroy()
-        this.bg = this.add.image(400, 300, background).setDepth(-10);
+
+        this.floor = this.add.image(400, 300, "floor").setDepth(-10);
+        this.trees = this.add.image(0, 0, "trees").setDepth(-8).setOrigin(0, 0);
 
         if(this.player) this.player.destroy();
         if(!this.bruh) this.bruh = this.sound.add('bruh');
@@ -64,7 +77,8 @@ class Garden extends Phaser.Scene {
         if(!this.fence) this.fence = this.physics.add.staticImage(400, 100, 'fence');
         this.fence.body.setSize(800, 60);
         this.fence.setDepth(-6);
-        
+
+        if(this.map) this.map.destroy();
         if(this.mapElements) {
             this.mapElements.forEach(obj => {
                 obj.destroy();
@@ -275,6 +289,7 @@ class Carrot extends Special {
   
     onOverlap() {
         if (!this.active) return;
+        new Shine(this.player.scene, this.body.x+15, this.body.y);
         this.destroy();
         this.player.carrots++
         console.log(this.player.scene.carrotGoal);
@@ -381,22 +396,40 @@ class Powerup extends Special {
     }
   
     onOverlap() {
+        new Shine(this.scene, this.body.x, this.body.y);
         this.player.dialogStart("power"+this.number);
         if (this.number === 3) {
             this.destroy();
             const scene = this.player.scene
             console.log("collect")
             scene.music.stop();
+            // scene.isPaused = true;
+            this.player.setVelocity(0, 0);
             scene.time.delayedCall(3000, () => {
                 glitchLag(scene, 8, 300, function(){
                     scene.music.play();
                     scene.music.setSeek(2);
+                    scene.sky.setPosition(0,0);
                 }, function(){
                     scene.music.setRate(0.98);
                     scene.music.play();
+                    scene.isPaused=false;
                     scene.loadLevel(8);
                 })
             })
         } else this.destroy();
+    }
+}
+
+class Shine extends Phaser.GameObjects.Sprite {
+    constructor(scene, x, y) {
+        super (scene, x, y, "shine")
+        scene.add.existing(this);
+        this.setOrigin(0.5, 0.5);
+        this.setDepth(0);
+        createAnimation(this.scene, "shineanim", "shine", 0, 3, 10, 0, false);
+        this.anims.play("shineanim");
+        this.anims.play("shineanim");
+        this.on('animationcomplete', () => this.destroy());
     }
 }
