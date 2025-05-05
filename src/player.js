@@ -6,8 +6,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.body.collideWorldBounds = true;
         this.setSize(49, 32);
         this.body.setOffset(28, 79);
-        this.speed = 500;
-        this.dialogSpeed = 1;
+        this.speed = 200;
+        this.dialogSpeed = 50;
         this.dialogIndex = null;
         this.carrots = 0;
         this.diagSpeed = this.speed / Math.SQRT2;

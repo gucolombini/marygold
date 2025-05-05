@@ -16,7 +16,7 @@ class Garden extends Phaser.Scene {
         this.music.setSeek(0);
         console.log(this.music.currentConfig);
         this.cameras.main.preRender();
-        this.loadLevel("power3");
+        this.loadLevel(0);
     }
 
     update(time, delta){
