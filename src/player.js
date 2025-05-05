@@ -153,7 +153,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this._finishedDialog = false;
         this._nextDialog = this.dialogs[index].next;
         this.scene.dialogText.setText(this.dialogs[index].text);
-        animateText(this.scene.dialogText, 1, this.scene.bruh).then(() => {
+        animateText(this.scene.dialogText, 50, this.scene.bruh).then(() => {
         this._finishedDialog = true;
         this.scene.dialogE.show(700, 550);
         });
