@@ -32,11 +32,12 @@ class Loading extends Phaser.Scene {
         console.log(this.loadingProgress)
         this.loadingText.setText("Loading: " + this.loadingProgress + "%" + "\n" + this.loadedFile)
       });
-  
+      this.load.image('background0', 'src/public/assets/bg0.png');
       this.load.image('background', 'src/public/assets/bg.png');
       this.load.audio('garden_calm', 'src/public/assets/garden_calm.ogg');
       this.load.image('marystatic', 'src/public/assets/marystatic.png');
       this.load.image('tooltip_e', 'src/public/assets/tooltipE.png');
+      this.load.image('tooltip_space', 'src/public/assets/tooltipSPACE.png');
       this.load.image('dialogbox', 'src/public/assets/dialogbox.png');
       this.load.image('fence', 'src/public/assets/fence.png');
   
@@ -45,6 +46,7 @@ class Loading extends Phaser.Scene {
       this.load.image('portrait_mary_cursed', 'src/public/assets/portraits/portrait_mary_cursed.png');
       this.load.image('portrait_mary_eye', 'src/public/assets/portraits/portrait_mary_eye.png');
       this.load.image('portrait_mary_hole', 'src/public/assets/portraits/portrait_mary_hole.png');
+      this.load.image('portrait_exclamation', 'src/public/assets/portraits/portrait_exclamation.png');
   
       this.load.audio('bruh', 'src/public/assets/audio/blip_mary.ogg');
 
@@ -54,9 +56,11 @@ class Loading extends Phaser.Scene {
       });
 
       // mapa tilesets e elementos especiais
-      this.load.tilemapTiledJSON('map_0', 'src/public/assets/maps/gardentest.json');
-      for (let i = 1; i < 8; i++) {
+      for (let i = 0; i < 8; i++) {
         this.load.tilemapTiledJSON('map_'+i, 'src/public/assets/maps/garden'+i+'.json');
+      }
+      for (let i = 1; i < 4; i++) {
+        this.load.tilemapTiledJSON('map_power'+i, 'src/public/assets/maps/gardenpower'+i+'.json');
       }
       this.load.image('tileset_garden', 'src/public/assets/maps/tileset_garden.png');
       this.load.spritesheet('puddle', 'src/public/assets/puddle.png', {
@@ -70,6 +74,10 @@ class Loading extends Phaser.Scene {
       this.load.spritesheet('buriedcarrot', 'src/public/assets/carrotburied.png', {
         frameWidth: 29,
         frameHeight: 24,
+      });
+      this.load.spritesheet('powerup', 'src/public/assets/powerup.png', {
+        frameWidth: 64,
+        frameHeight: 59,
       });
     }
   

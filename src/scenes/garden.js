@@ -13,8 +13,10 @@ class Garden extends Phaser.Scene {
         this.music.setLoop(true);
         this.music.setVolume(0.5);
         this.music.play();
+        this.music.setSeek(0);
         console.log(this.music.currentConfig);
-        this.loadLevel(0);
+        this.cameras.main.preRender();
+        this.loadLevel("power3");
     }
 
     update(time, delta){
@@ -23,22 +25,42 @@ class Garden extends Phaser.Scene {
         this.player.playerLogic();
     }
 
-    loadLevel(level) {
+    transitionLevel(level) {
+        if (this.level === 3 && level === 4) level = 'power1';
+        else if (this.level === 5 && level === 6) level = 'power2';
+        else if (this.level === 7 && level === 8) level = 'power3';
+
+        if (this.level === 'power1') level = 4;
+        else if (this.level === 'power2') level = 6;
+        else if (this.level === 'power3') level = 8;
+
+        this.cameras.main.fadeOut(1000, 0, 0, 0);
+        this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
+        this.loadLevel(level, true);
+        })
+    }
+
+    loadLevel(level, fade) {
         let background = 'background'
-        if(!this.level) this.level = 0;
+        this.level = level;
+        if(level === 0) {
+            background = 'background0'
+        }
         if(level > 7) {
             background = 'background2'
         }
         this.isPaused = true;
         this.carrotGoal = 0;
+        if (fade && fade === true) this.cameras.main.fadeIn(1000, 0, 0, 0);
 
         if(this.bg) this.bg.destroy();
         if(this.map) this.map.destroy();
         //if(this.mapSpecial) this.mapSpecial.destroy()
         this.bg = this.add.image(400, 300, background).setDepth(-10);
-        if(this.player) this.player.destroy();
 
+        if(this.player) this.player.destroy();
         if(!this.bruh) this.bruh = this.sound.add('bruh');
+
         if(!this.fence) this.fence = this.physics.add.staticImage(400, 100, 'fence');
         this.fence.body.setSize(800, 60);
         this.fence.setDepth(-6);
@@ -48,8 +70,9 @@ class Garden extends Phaser.Scene {
                 obj.destroy();
             })
         }
+
         this.player = new Player(this, 200, 200);
-        this.player.dialogStart('intro'+(level+1))
+        this.player.dialogStart('intro'+(level))
 
         this.physics.add.collider(this.player, this.fence);
 
@@ -80,12 +103,21 @@ class Garden extends Phaser.Scene {
                 this.mapElements.push(new BuriedCarrot(this, obj.x, obj.y, this.player));
                 this.carrotGoal++;
                 console.log(this.carrotGoal);
+            } else if (obj.name === 'power1' || obj.name === 'power2' || obj.name === 'power3') {
+                console.log("POWER")
+                this.mapElements.push(new Powerup(this, obj.x, obj.y, this.player, parseInt(obj.name.slice(-1))));
+                this.carrotGoal++;
+                console.log(this.carrotGoal);
             } else if (obj.name === 'playerspawn') {
                 this.player.setPosition(obj.x, obj.y);
+                this.fence.setVisible(true);
                 if (obj.x > 400) {
                     this.fence.setFlipX(false);
                 } else {
                     this.fence.setFlipX(true);
+                }
+                if (obj.y > 200){
+                    this.fence.setVisible(false);
                 }
             } 
           });
@@ -112,11 +144,13 @@ function randomMusicPitch(music) {
 }
 
 class Tooltip extends Phaser.GameObjects.Image {
-    constructor(scene) {
-        super(scene, 0, 0, 'tooltip_e');
+    constructor(scene, key, dontAnimate) {
+        super(scene, 0, 0, 'tooltip_'+key);
         this.setVisible(false);
         this.setDepth(2); // Ensure it shows on top
         scene.add.existing(this);
+
+        if (dontAnimate) return;
 
         scene.tweens.add({
             targets: this,
@@ -138,7 +172,8 @@ class Tooltip extends Phaser.GameObjects.Image {
         });
     }
 
-    show(x, y) {
+    show(x, y, key) {
+        if(key) this.setTexture('tooltip_'+key)
         this.setPosition(x, y);
         this.setVisible(true);
     }
@@ -197,6 +232,8 @@ class Special extends Phaser.Physics.Arcade.Sprite {
     }
 
     sideHitboxesCallback(sensor) {
+        this.player.activateTooltip("space")
+        console.log(this.player._tooltipActiveTime);
         switch (sensor) {
             case "top":
                 if (this.player._dir.down && Phaser.Input.Keyboard.JustDown(this.scene.spaceKey)) this.player.jump('down');
@@ -244,8 +281,7 @@ class Carrot extends Special {
         console.log(this.player.carrots);
         if(this.player.carrots >= this.player.scene.carrotGoal) {
             console.log('novo nivel desbloqueado')
-            this.player.scene.level++;
-            this.player.scene.loadLevel(this.player.scene.level);
+            this.player.scene.transitionLevel(this.player.scene.level+1);
         }
     }
 }
@@ -259,39 +295,47 @@ class BuriedCarrot extends Special {
         this.scene.physics.add.collider(this.player, this);
         this.setSize(50, 50);
         this.setDepth(-3);
-
         this.createSideHitboxes(scene, 3, 10, 0);
     }
 
     sideHitboxesCallback(sensor){
-        if (this.player._isTalking) return;
+        this.player.activateTooltip("e")
+        if (this.player._isTalking || this.player._isWatering) return;
         switch (sensor) {
             case "top":
                 if (Phaser.Input.Keyboard.JustDown(this.player.scene.Ekey)) {
                     this.player.water("down");
-                    this.player.scene.mapElements.push(new Carrot(this.player.scene, this.x, this.y, this.player));
-                    this.destroy();
+                    this.player.scene.time.delayedCall(700, () => {
+                        this.player.scene.mapElements.push(new Carrot(this.player.scene, this.x, this.y, this.player));
+                        this.destroy();
+                    });
                 };
                 break;
             case "bottom":
                 if (Phaser.Input.Keyboard.JustDown(this.player.scene.Ekey)) {
                     this.player.water("up");
-                    this.player.scene.mapElements.push(new Carrot(this.player.scene, this.x, this.y, this.player));
-                    this.destroy();
+                    this.player.scene.time.delayedCall(700, () => {
+                        this.player.scene.mapElements.push(new Carrot(this.player.scene, this.x, this.y, this.player));
+                        this.destroy();
+                    });
                 };
                 break;
             case "left":
                 if (Phaser.Input.Keyboard.JustDown(this.player.scene.Ekey)) {
                     this.player.water("right");
-                    this.player.scene.mapElements.push(new Carrot(this.player.scene, this.x, this.y, this.player));
-                    this.destroy();
+                    this.player.scene.time.delayedCall(700, () => {
+                        this.player.scene.mapElements.push(new Carrot(this.player.scene, this.x, this.y, this.player));
+                        this.destroy();
+                    });
                 };
                 break;
             case "right":
                 if (Phaser.Input.Keyboard.JustDown(this.player.scene.Ekey)) {
                     this.player.water("left");
-                    this.player.scene.mapElements.push(new Carrot(this.player.scene, this.x, this.y, this.player));
-                    this.destroy();
+                    this.player.scene.time.delayedCall(700, () => {
+                        this.player.scene.mapElements.push(new Carrot(this.player.scene, this.x, this.y, this.player));
+                        this.destroy();
+                    });
                 };
                 break;
             default:
@@ -305,5 +349,54 @@ class BuriedCarrot extends Special {
         this.leftSensor.destroy();
         this.rightSensor.destroy();
         super.destroy();
+    }
+}
+
+class Powerup extends Special {
+    constructor(scene, x, y, player, number) {
+        super(scene, x, y, 'powerup', player);
+        this.number = number;
+        this.preFX.addGlow(0xffffff, 6, 0 );
+        this.setSize(25, 25);
+        this.setFrame(number-1);
+        this.setDepth(-2);
+        scene.tweens.add({
+            targets: this,
+            angle: { from: -10, to: 10 },
+            scale: { from: 1, to: 2},
+            duration: 1000,
+            yoyo: true,
+            repeat: -1, // Infinite loop
+            ease: 'Sine.easeInOut'
+        });
+
+        scene.tweens.add({
+            targets: this,
+            scale: { from: 0.9, to: 1.2 },
+            duration: 500,
+            yoyo: true,
+            repeat: -1, // Infinite loop
+            ease: 'Sine.easeInOut'
+        });
+    }
+  
+    onOverlap() {
+        this.player.dialogStart("power"+this.number);
+        if (this.number === 3) {
+            this.destroy();
+            const scene = this.player.scene
+            console.log("collect")
+            scene.music.stop();
+            scene.time.delayedCall(3000, () => {
+                glitchLag(scene, 8, 300, function(){
+                    scene.music.play();
+                    scene.music.setSeek(2);
+                }, function(){
+                    scene.music.setRate(0.98);
+                    scene.music.play();
+                    scene.loadLevel(3);
+                })
+            })
+        } else this.destroy();
     }
 }

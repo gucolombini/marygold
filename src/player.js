@@ -6,7 +6,9 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.body.collideWorldBounds = true;
         this.setSize(49, 32);
         this.body.setOffset(28, 79);
-        this.speed = 200;
+        this.speed = 500;
+        this.dialogSpeed = 1;
+        this.dialogIndex = null;
         this.carrots = 0;
         this.diagSpeed = this.speed / Math.SQRT2;
         this.animState = 'idledown'
@@ -16,7 +18,9 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             down: false,
             up: false
         };
-        this._tooltip = false;
+        this.tooltip = new Tooltip(this.scene, "space");
+        this._tooltipActiveTime = 0;
+        this._tooltip = null;
         this._isTalking = false;
         this._isJumping = false;
         if (!this.scene.arrowkeys) this.scene.arrowkeys = this.scene.input.keyboard.createCursorKeys();
@@ -24,11 +28,11 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         if (!this.scene.Ekey) this.scene.Ekey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
 
         createAnimation(this.scene, 'maryidledown', 'mary', 1, 1, -1, 0);
-        createAnimation(this.scene, 'marywalkdown', 'mary', 0, 2, 4, -1, true);
+        createAnimation(this.scene, 'marywalkdown', 'mary', 0, 2, 5, -1, true);
         createAnimation(this.scene, 'maryidleup', 'mary', 4, 4, -1, 0);
-        createAnimation(this.scene, 'marywalkup', 'mary', 3, 5, 4, -1, true);
+        createAnimation(this.scene, 'marywalkup', 'mary', 3, 5, 5, -1, true);
         createAnimation(this.scene, 'maryidleright', 'mary', 7, 7, -1, 0);
-        createAnimation(this.scene, 'marywalkright', 'mary', 6, 8, 4, -1, true);
+        createAnimation(this.scene, 'marywalkright', 'mary', 6, 8, 5, -1, true);
         createAnimation(this.scene, 'marywaterdown', 'mary', 9, 10, 3, -1);
         createAnimation(this.scene, 'marywaterright', 'mary', 11, 12, 3, -1);
         createAnimation(this.scene, 'marywaterup', 'mary', 13, 14, 3, -1);
@@ -36,11 +40,15 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.play('maryidledown');
 
         this.dialogs = {
-            error:   { next: null, speaker: "mary_cursed", text: "ERRO! Este diálogo vai se autodestruir!" },
-            intro1:   { next: "intro1_1", speaker: "mary", text: "Olá! Eu sou Marygold, mas pode me chamar de Mary!" },
-            intro1_1:  { next: "intro1_2", speaker: "mary", text: "Estou precisando de algumas cenourinhas para fazer um bolo de cenoura muito gostoso..." },
-            intro1_2:  { next: null,    speaker: "mary", text: "Para isso, preciso dar um passeio na minha horta de cenouras! Você poderia me ajudar a colher?" },
-            intro2:   { next: null, speaker: "mary_cursed", text: "Caguei meu cu." },
+            error:   { next: null, speaker: "mary_worried", text: "ERRO! Este diálogo vai se autodestruir!" },
+            intro0:   { next: "intro0_1", speaker: "mary", text: "Olá! Eu sou Marygold, mas pode me chamar de Mary!" },
+            intro0_1:  { next: "intro0_2", speaker: "mary", text: "Estou precisando de algumas cenourinhas para fazer um bolo de cenoura muito gostoso..." },
+            intro0_2:  { next: null, end:"nextlevel", speaker: "mary", text: "Para isso, preciso dar um passeio na minha horta de cenouras! Você poderia me ajudar a colher?" },
+            intro1:   { next: null, speaker: "mary", text: "dialogo fase 2" },
+            power1:  { next: "power1_1", speaker: "mary", text: "Que legal, agora eu posso pular por cima de poças de água!" },
+            power1_1:  { next: null, end:"nextlevel", speaker: "exclamation", blip: "silent", text: "Pressione Espaço para pular!"},
+            power2:  { next: "power2_1", speaker: "mary", text: "Finalmente achei meu regador! Posso regar as cenourinhas que estão plantadas!" },
+            power2_1:  { next: null, end:"nextlevel", speaker: "exclamation", blip: "silent", text: "Pressione E para regar!"},
           }; 
 
     } 
@@ -99,7 +107,6 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             this.animState = 'walkup';
             this.setFlipX(false);
         }
-        console.log(this.animState);
         this.anims.play('mary'+this.animState, true);
         this.setVelocity(vx, vy);
     }
@@ -112,7 +119,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
                 if (this._nextDialog) {
                     this.dialogStart(this._nextDialog)
                 } else {
-                    this.dialogEnd();
+                    this.dialogEnd(this.dialogs[this.dialogIndex].end);
                 }
             }
         }
@@ -120,14 +127,15 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
     dialogStart(index) {
         if(!this.dialogs[index]) {
-            console.log("invalid dialog index");
-            this.dialogStart('error');
+            //console.log("invalid dialog index");
+            //this.dialogStart('error');
             return;
         }
 
         this.setVelocity(0, 0);
+        this.dialogIndex = index;
         if (!this.scene.dialogBox) this.scene.dialogBox = this.scene.add.image(400, 500, 'dialogbox');
-        if (!this.scene.dialogE) this.scene.dialogE = new Tooltip(this.scene, 700, 550);
+        if (!this.scene.dialogE) this.scene.dialogE = new Tooltip(this.scene, "e");
         this.scene.dialogE.setDepth(5).setScrollFactor(0,0).hide();
         if (!this.scene.dialogText) this.scene.dialogText = this.scene.add.text(215, 480, 'DUMMYTEXT',
             {
@@ -153,18 +161,31 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this._finishedDialog = false;
         this._nextDialog = this.dialogs[index].next;
         this.scene.dialogText.setText(this.dialogs[index].text);
-        animateText(this.scene.dialogText, 1, this.scene.bruh).then(() => {
+
+        let blip = this.scene.bruh;
+        if (this.dialogs[index].blip === 'silent') blip = null;
+        animateText(this.scene.dialogText, this.dialogSpeed, blip).then(() => {
         this._finishedDialog = true;
         this.scene.dialogE.show(700, 550);
         });
     }
 
-    dialogEnd() {
+    dialogEnd(event) {
         this.scene.dialogText.setText("FINISHED");
         this.scene.dialogBox.setVisible(false);
         this.scene.dialogText.setVisible(false);
         this.scene.dialogPortrait.destroy();
         this.scene.dialogE.hide();
+        if(event) {
+            switch (event) {
+                case "nextlevel":
+                    this.scene.transitionLevel(this.scene.level+1);
+                    break;
+            
+                default:
+                    break;
+            }
+        }
         this._isTalking = false;
     }
 
@@ -214,6 +235,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
     water(dir) {
         this._isWatering = true;
+        this.setVelocity(0, 0);
         this.scene.time.delayedCall(1000, () => {this._isWatering = false;})
         switch (dir) {
             case "up":
@@ -233,8 +255,24 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         }
     }
 
+    activateTooltip(key) {
+        this._tooltip = key;
+        this._tooltipActiveTime = 5;
+    }
+
     playerLogic() {
+        if (this._tooltipActiveTime > 0) {
+            this._tooltipActiveTime--;
+            if (!this._isJumping && !this._isTalking && !this._isWatering) {
+                this.tooltip.show(this.body.x+24, this.body.y-100, this._tooltip);
+            } else this.tooltip.hide();
+        } else this.tooltip.hide();
         this.moveLogic();
         this.dialogLogic();
+    }
+
+    destroy() {
+        this.tooltip.destroy();
+        super.destroy();
     }
 }

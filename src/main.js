@@ -215,7 +215,7 @@ function animateText(target, speedInMs = 25, sound) {
         }
 
         // add next character to visible text
-        if (message[visibleText.length] != " " && message[visibleText.length] != "!" && message[visibleText.length] != "?" && message[visibleText.length] != "." && message[visibleText.length] != ",") {
+        if (sound != null && message[visibleText.length] != " " && message[visibleText.length] != "!" && message[visibleText.length] != "?" && message[visibleText.length] != "." && message[visibleText.length] != ",") {
           rate = Phaser.Math.Between(8, 12)/10
           sound.setRate(rate)
           sound.play();
@@ -231,4 +231,16 @@ function animateText(target, speedInMs = 25, sound) {
       },
     });
   });
+}
+
+function glitchLag(scene, times, interval, event, end) {
+  for(let i=0; i<times; i++) {
+    scene.time.delayedCall(interval*i, () => {
+      console.log("GLITCH");
+      if (event) event();
+    })
+  }
+  scene.time.delayedCall(interval*times+1, () => {
+    if (end) end();
+  })
 }
