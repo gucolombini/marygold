@@ -27,7 +27,7 @@ var config = {
     mode: Phaser.Scale.NONE, // No automatic scaling
     autoCenter: Phaser.Scale.NO_CENTER // Optional: don’t auto center
   },
-  scene: [Loading, Garden],
+  scene: [Title, Loading, Garden],
 };
 
 // Instanciando o phaser
