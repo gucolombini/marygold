@@ -6,8 +6,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.body.collideWorldBounds = true;
         this.setSize(49, 32);
         this.body.setOffset(28, 79);
-        this.speed = 200;
-        this.dialogSpeed = 50;
+        this.speed = 600;
+        this.dialogSpeed = 1;
         this.dialogIndex = null;
         this.carrots = 0;
         this.diagSpeed = this.speed / Math.SQRT2;
@@ -18,7 +18,10 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             down: false,
             up: false
         };
-        this.tooltip = new Tooltip(this.scene, "space");
+        if (!this.scene.ui) this.scene.ui = {};
+        if (this.scene.ui.tooltip) this.scene.ui.tooltip.destroy();
+        this.scene.ui.tooltip = new Tooltip(this.scene, "space");
+        this.tooltip = this.scene.ui.tooltip;
         this._tooltipActiveTime = 0;
         this._tooltip = null;
         this._isTalking = false;

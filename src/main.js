@@ -7,7 +7,7 @@ var config = {
   type: Phaser.WEBGL,
   width: width,
   height: height,
-  zoom: 1, // ensures no internal scaling
+  //zoom: 1, // ensures no internal scaling
   disableContextMenu: true, // Desativa a interação do navegador com o botão direito do mouse
   //CONSERTAR ENQUADRAMENTO
   scale: { mode: Phaser.Scale.FIT }, //Dimensiona o conteúdo para que ele preencha a tela inteira, mantendo sua proporção

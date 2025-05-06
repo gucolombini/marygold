@@ -5,6 +5,7 @@ class Garden extends Phaser.Scene {
 
     preload(){
         // tela de loading já faz isso
+        this.load.plugin('rexgrayscalepipelineplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexgrayscalepipelineplugin.min.js', true);
     }
 
     create(){
@@ -15,26 +16,34 @@ class Garden extends Phaser.Scene {
         this.music.play();
         this.music.setSeek(0);
         console.log(this.music.currentConfig);
+        var postFxPlugin = this.plugins.get('rexgrayscalepipelineplugin');
+        this.cameraFilter = postFxPlugin.add(this.cameras.main, { intensity: 0.7 });
         this.cameras.main.preRender();
-        this.loadLevel(0);
+        this.loadLevel(8);
+        this.cameras.main.setPostPipeline('Gray');
     }
 
     update(time, delta){
-        // runEvery(this, 10, delta, 'musicPitcher', () => randomMusicPitch(this.music));
+        //runEvery(this, 10, delta, 'musicPitcher', () => randomMusicPitch(this.music));
+        runEvery(this, 1, delta, 'cameraShake', () => this.camShake());
         if (this.isPaused) return;
         this.skyLogic(delta);
         this.player.playerLogic();
     }
 
     skyLogic(delta) {
-        if (this.level > 7) delta *= (this.level-7)*2;
-        if (this.sky) {
-            this.sky.setPosition(this.sky.x-delta/100, 0);
-            if (this.sky.x < -800) {
-                this.sky.setPosition(0, 0);
+        if (this.level > 7) delta *= (this.level-7)*3;
+        if (this.bg.sky) {
+            this.bg.sky.setPosition(this.bg.sky.x-delta/100, 0);
+            if (this.bg.sky.x < -800) {
+                this.bg.sky.setPosition(0, 0);
             }
 
         }
+    }
+
+    camShake() {
+        this.cameras.main.setPosition(Phaser.Math.Between(-2, 2),Phaser.Math.Between(-2, 2))
     }
 
     transitionLevel(level) {
@@ -47,6 +56,7 @@ class Garden extends Phaser.Scene {
         else if (this.level === 'power3') level = 8;
 
         this.cameras.main.fadeOut(1000, 0, 0, 0);
+        if (this.playerCam) this.playerCam.fadeOut(1000, 0, 0, 0);
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
         this.loadLevel(level, true);
         })
@@ -56,27 +66,33 @@ class Garden extends Phaser.Scene {
         // let background = 'background'
         this.level = level;
 
+        if(this.playerCam) this.cameras.remove(this.playerCam);
+
         this.isPaused = true;
         this.carrotGoal = 0;
-        if (fade && fade === true) this.cameras.main.fadeIn(1000, 0, 0, 0);
+        // if (level > 7 && !this.grayscaleOverlay) {
+        //     this.grayscaleOverlay = this.add.rectangle(0, 0, this.cameras.main.width, this.cameras.main.height, 0xffffff)
+        //         .setOrigin(0, 0)
+        //         .setScrollFactor(0) // Sticks to camera
+        //         .setDepth(11)     // Put it above everything else
+        //         .setBlendMode(Phaser.BlendModes.MULTIPLY)
+        //         .setAlpha(0.5);     // Controls strength of effect
+        // }
 
-        if(level == 0) this.bg = this.add.image(400, 300, "background0");
-        else if (this.bg) this.bg.destroy();
+        if(!this.bg) this.bg = {};
+        if(level == 0) this.bg.image = this.add.image(400, 300, "background0");
+        else if (this.bg.image) this.bg.image.destroy();
 
-        if(this.floor) this.floor.destroy();
-        if(this.trees) this.trees.destroy();
-        if(!this.sky) this.sky = this.add.image(0, 0, "sky").setDepth(-9).setOrigin(0, 0);
+        if(this.bg.floor) this.bg.floor.destroy();
+        if(this.bg.trees) this.bg.trees.destroy();
+        if(!this.bg.sky) this.bg.sky = this.add.image(0, 0, "sky").setDepth(-9).setOrigin(0, 0);
         //if(this.mapSpecial) this.mapSpecial.destroy()
 
-        this.floor = this.add.image(400, 300, "floor").setDepth(-10);
-        this.trees = this.add.image(0, 0, "trees").setDepth(-8).setOrigin(0, 0);
-
-        if(this.player) this.player.destroy();
-        if(!this.bruh) this.bruh = this.sound.add('bruh');
-
-        if(!this.fence) this.fence = this.physics.add.staticImage(400, 100, 'fence');
-        this.fence.body.setSize(800, 60);
-        this.fence.setDepth(-6);
+        this.bg.floor = this.add.image(400, 300, "floor").setDepth(-10);
+        this.bg.trees = this.add.image(0, 0, "trees").setDepth(-8).setOrigin(0, 0);
+        if(!this.bg.fence) this.bg.fence = this.physics.add.staticImage(400, 100, 'fence');
+        this.bg.fence.body.setSize(800, 60);
+        this.bg.fence.setDepth(-6);
 
         if(this.map) this.map.destroy();
         if(this.mapElements) {
@@ -85,10 +101,13 @@ class Garden extends Phaser.Scene {
             })
         }
 
+        if(!this.bruh) this.bruh = this.sound.add('bruh');
+
+        if(this.player) this.player.destroy();
         this.player = new Player(this, 200, 200);
         this.player.dialogStart('intro'+(level))
 
-        this.physics.add.collider(this.player, this.fence);
+        this.physics.add.collider(this.player, this.bg.fence);
 
         //this.cameras.addExisting(this.cameras.main); // Adiciona a câmera principal à cena (o jogo automaticamente acompanhará ela)
         //this.cameras.main.startFollow(this.player);
@@ -124,14 +143,14 @@ class Garden extends Phaser.Scene {
                 console.log(this.carrotGoal);
             } else if (obj.name === 'playerspawn') {
                 this.player.setPosition(obj.x, obj.y);
-                this.fence.setVisible(true);
+                this.bg.fence.setVisible(true);
                 if (obj.x > 400) {
-                    this.fence.setFlipX(false);
+                    this.bg.fence.setFlipX(false);
                 } else {
-                    this.fence.setFlipX(true);
+                    this.bg.fence.setFlipX(true);
                 }
                 if (obj.y > 200){
-                    this.fence.setVisible(false);
+                    this.bg.fence.setVisible(false);
                 }
             } 
           });
@@ -139,6 +158,18 @@ class Garden extends Phaser.Scene {
             if (obj.onOverlap) obj.onOverlap();
         });
         this.isPaused = false;
+        this.playerCam = this.cameras.add(0, 0, 800, 600);
+        this.playerCam.ignore([Object.values(this.bg), Object.values(this.ui), this.map.collision, this.mapElements]);
+        this.cameras.main.ignore(this.player);
+        this.cameras.main.setBounds(0, 0, 800, 600);
+        this.playerCam.setBounds(0, 0, 800, 600);
+        if (fade && fade === true) {
+            this.cameras.main.fadeIn(1000, 0, 0, 0);
+            this.playerCam.fadeIn(1000, 0, 0, 0);
+        };
+
+        this.cameras.main.startFollow(this.player).setZoom(1.1);
+        this.playerCam.startFollow(this.player).setZoom(1.1);
     }
 }
 
@@ -155,6 +186,10 @@ function randomMusicPitch(music) {
     if (music._interval < 0.5 && music._interval > -0.5) {
         music._interval = Phaser.Math.Between(-10, 10);
     };
+}
+
+function playerCamRefresh(scene) {
+    scene.playerCam.ignore([Object.values(scene.bg), Object.values(scene.ui), scene.map.collision, scene.mapElements]);
 }
 
 class Tooltip extends Phaser.GameObjects.Image {
@@ -246,8 +281,7 @@ class Special extends Phaser.Physics.Arcade.Sprite {
     }
 
     sideHitboxesCallback(sensor) {
-        this.player.activateTooltip("space")
-        console.log(this.player._tooltipActiveTime);
+        this.player.activateTooltip("space");
         switch (sensor) {
             case "top":
                 if (this.player._dir.down && Phaser.Input.Keyboard.JustDown(this.scene.spaceKey)) this.player.jump('down');
@@ -322,6 +356,7 @@ class BuriedCarrot extends Special {
                     this.player.water("down");
                     this.player.scene.time.delayedCall(700, () => {
                         this.player.scene.mapElements.push(new Carrot(this.player.scene, this.x, this.y, this.player));
+                        playerCamRefresh(this.player.scene);
                         this.destroy();
                     });
                 };
@@ -331,6 +366,7 @@ class BuriedCarrot extends Special {
                     this.player.water("up");
                     this.player.scene.time.delayedCall(700, () => {
                         this.player.scene.mapElements.push(new Carrot(this.player.scene, this.x, this.y, this.player));
+                        playerCamRefresh(this.player.scene);
                         this.destroy();
                     });
                 };
@@ -340,6 +376,7 @@ class BuriedCarrot extends Special {
                     this.player.water("right");
                     this.player.scene.time.delayedCall(700, () => {
                         this.player.scene.mapElements.push(new Carrot(this.player.scene, this.x, this.y, this.player));
+                        playerCamRefresh(this.player.scene);
                         this.destroy();
                     });
                 };
@@ -349,6 +386,7 @@ class BuriedCarrot extends Special {
                     this.player.water("left");
                     this.player.scene.time.delayedCall(700, () => {
                         this.player.scene.mapElements.push(new Carrot(this.player.scene, this.x, this.y, this.player));
+                        playerCamRefresh(this.player.scene);
                         this.destroy();
                     });
                 };
@@ -433,3 +471,24 @@ class Shine extends Phaser.GameObjects.Sprite {
         this.on('animationcomplete', () => this.destroy());
     }
 }
+
+class GrayscalePipeline extends Phaser.Renderer.WebGL.Pipelines.PostFXPipeline {
+    constructor(game) {
+      super({
+        name: 'Gray',
+        game,
+        fragShader: `
+          precision mediump float;
+  
+          uniform sampler2D uMainSampler;
+          varying vec2 outTexCoord;
+  
+          void main(void) {
+            vec4 color = texture2D(uMainSampler, outTexCoord);
+            float gray = dot(color.rgb, vec3(0.299, 0.587, 0.114));
+            gl_FragColor = vec4(vec3(gray), color.a);
+          }
+        `
+      });
+    }
+  }
