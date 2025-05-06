@@ -5,7 +5,7 @@ class Garden extends Phaser.Scene {
 
     preload(){
         // tela de loading já faz isso
-        this.load.plugin('rexgrayscalepipelineplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexgrayscalepipelineplugin.min.js', true);
+        this.load.plugin('rexgrayscalepipelineplugin', 'src/plugins/rexgrayscalepipelineplugin.min.js', true);
     }
 
     create(){
