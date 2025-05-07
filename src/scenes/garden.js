@@ -6,6 +6,7 @@ class Garden extends Phaser.Scene {
     preload(){
         // tela de loading já faz isso
         this.load.plugin('rexgrayscalepipelineplugin', 'src/plugins/rexgrayscalepipelineplugin.min.js', true);
+        this.load.plugin('rextoonifypipelineplugin', 'src/plugins/rextoonifypipelineplugin.min.js', true);
     }
 
     create(){
@@ -16,25 +17,34 @@ class Garden extends Phaser.Scene {
         this.music.play();
         this.music.setSeek(0);
         console.log(this.music.currentConfig);
-        this.postFxPlugin = this.plugins.get('rexgrayscalepipelineplugin');
-        // this.cameraFilter = postFxPlugin.add(this.cameras.main, { intensity: 0.7 });
+        this.GrayscalePlugin = this.plugins.get('rexgrayscalepipelineplugin');
+        this.ToonifyPlugin = this.plugins.get('rextoonifypipelineplugin');
+        // this.cameraFilter = GrayscalePlugin.add(this.cameras.main, { intensity: 0.7 });
         // this.cameras.main.setPostPipeline('Gray');
-        this.loadLevel(0);
+        this.loadLevel("power3");
     }
 
     update(time, delta){
         if(this.music.distortion === true) {
             runEvery(this, 50-this.level*3, delta, 'musicPitcher', () => {
                 if (this.level == 15) {
-                    this.music.setRate(this.music.rate*0.98);
+                    if(this.music.rate > 0.01) this.music.setRate(this.music.rate*0.98);
+                    console.log(this.music.rate);
                 } else randomMusicPitch(this.music);
             });
         }
         runEvery(this, 1, delta, 'cameraShake', () => {
-            if (this.level > 8) {
-                this.camShake(0.3317*(this.level-1)-2.9753);
+            if (this.level > 10) {
+                this.camShake((this.level-10)/5);
             }
         });
+        if(this.level > 11) {
+            this.toonifyFilter.valLevels -= 0.01;
+            if(this.toonifyFilter.valLevels<1) this.toonifyFilter.valLevels = Phaser.Math.Between(1, 10);
+        }
+        // runEvery(this, 1, delta, 'heatdeath', () => {
+            
+        // })
         if (this.isPaused) return;
         this.skyLogic(delta);
         this.player.playerLogic();
@@ -181,9 +191,25 @@ class Garden extends Phaser.Scene {
         this.playerCam.startFollow(this.player).setZoom(1);
 
         if (level > 7) {
+            let intensity;
+            if (level == 8) intensity = 0.1;
+            else if (level == 9) intensity = 0.25;
+            else if (level == 10) intensity = 0.5;
+            else {
+                intensity = 0.6;
+                if (!this.red) this.red = this.add.rectangle(400, 300, 800, 600, 0xff0000, 0.7)
+                    .setDepth(99)
+                .setBlendMode(Phaser.BlendModes.MULTIPLY);
+            }
             this.music.distortion = true;
-            this.cameraFilter = this.postFxPlugin.add(this.cameras.main, { intensity: (level-7)/30});
-            this.cameras.main.setPostPipeline('Gray');
+            if(!this.cameraFilter) this.cameraFilter = this.GrayscalePlugin.add(this.cameras.main);
+            if(!this.toonifyFilter) this.toonifyFilter = this.ToonifyPlugin.add(this.cameras.main);
+            this.cameraFilter.intensity = intensity;
+            this.toonifyFilter.edgeThreshold = 1.1;
+            this.toonifyFilter.valLevels = 10;
+            //this.cameras.main.setPostPipeline('Gray');
+            //this.ToonifyPlugin.add(this.cameras.main);
+            // this.cameraFilter2 = this.ToonifyPlugin.add()
         } else this.music.distortion = false;
     }
 }
@@ -455,11 +481,16 @@ class Powerup extends Special {
             this.destroy();
             const scene = this.player.scene
             console.log("collect")
-            scene.music.stop();
+            scene.music.setRate(5);
+            scene.time.delayedCall(300, () => {
+                scene.music.stop()
+                scene.music.setRate(1);
+            })
             // scene.isPaused = true;
             this.player.setVelocity(0, 0);
             scene.time.delayedCall(3000, () => {
                 glitchLag(scene, 8, 300, function(){
+                    scene.music.setRate(scene.music.rate*1.01)
                     scene.music.play();
                     scene.music.setSeek(2);
                     scene.bg.sky.setPosition(0,0);
