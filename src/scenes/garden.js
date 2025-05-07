@@ -16,23 +16,32 @@ class Garden extends Phaser.Scene {
         this.music.play();
         this.music.setSeek(0);
         console.log(this.music.currentConfig);
-        var postFxPlugin = this.plugins.get('rexgrayscalepipelineplugin');
-        this.cameraFilter = postFxPlugin.add(this.cameras.main, { intensity: 0.7 });
-        this.cameras.main.preRender();
-        this.loadLevel(8);
-        this.cameras.main.setPostPipeline('Gray');
+        this.postFxPlugin = this.plugins.get('rexgrayscalepipelineplugin');
+        // this.cameraFilter = postFxPlugin.add(this.cameras.main, { intensity: 0.7 });
+        // this.cameras.main.setPostPipeline('Gray');
+        this.loadLevel(0);
     }
 
     update(time, delta){
-        //runEvery(this, 10, delta, 'musicPitcher', () => randomMusicPitch(this.music));
-        runEvery(this, 1, delta, 'cameraShake', () => this.camShake());
+        if(this.music.distortion === true) {
+            runEvery(this, 50-this.level*3, delta, 'musicPitcher', () => {
+                if (this.level == 15) {
+                    this.music.setRate(this.music.rate*0.98);
+                } else randomMusicPitch(this.music);
+            });
+        }
+        runEvery(this, 1, delta, 'cameraShake', () => {
+            if (this.level > 8) {
+                this.camShake(0.3317*(this.level-1)-2.9753);
+            }
+        });
         if (this.isPaused) return;
         this.skyLogic(delta);
         this.player.playerLogic();
     }
 
     skyLogic(delta) {
-        if (this.level > 7) delta *= (this.level-7)*3;
+        if (this.level > 7) delta *= (this.level-7)**2.4;
         if (this.bg.sky) {
             this.bg.sky.setPosition(this.bg.sky.x-delta/100, 0);
             if (this.bg.sky.x < -800) {
@@ -42,8 +51,8 @@ class Garden extends Phaser.Scene {
         }
     }
 
-    camShake() {
-        this.cameras.main.setPosition(Phaser.Math.Between(-2, 2),Phaser.Math.Between(-2, 2))
+    camShake(amount) {
+        this.cameras.main.setPosition(Phaser.Math.Between(-amount, amount),Phaser.Math.Between(-amount, amount))
     }
 
     transitionLevel(level) {
@@ -168,8 +177,14 @@ class Garden extends Phaser.Scene {
             this.playerCam.fadeIn(1000, 0, 0, 0);
         };
 
-        this.cameras.main.startFollow(this.player).setZoom(1.1);
-        this.playerCam.startFollow(this.player).setZoom(1.1);
+        this.cameras.main.startFollow(this.player).setZoom(1);
+        this.playerCam.startFollow(this.player).setZoom(1);
+
+        if (level > 7) {
+            this.music.distortion = true;
+            this.cameraFilter = this.postFxPlugin.add(this.cameras.main, { intensity: (level-7)/30});
+            this.cameras.main.setPostPipeline('Gray');
+        } else this.music.distortion = false;
     }
 }
 
@@ -447,7 +462,7 @@ class Powerup extends Special {
                 glitchLag(scene, 8, 300, function(){
                     scene.music.play();
                     scene.music.setSeek(2);
-                    scene.sky.setPosition(0,0);
+                    scene.bg.sky.setPosition(0,0);
                 }, function(){
                     scene.music.setRate(0.98);
                     scene.music.play();
@@ -463,8 +478,9 @@ class Shine extends Phaser.GameObjects.Sprite {
     constructor(scene, x, y) {
         super (scene, x, y, "shine")
         scene.add.existing(this);
+        playerCamRefresh(scene);
         this.setOrigin(0.5, 0.5);
-        this.setDepth(0);
+        this.setDepth(this.scene.player.depth + 1);
         createAnimation(this.scene, "shineanim", "shine", 0, 3, 10, 0, false);
         this.anims.play("shineanim");
         this.anims.play("shineanim");
