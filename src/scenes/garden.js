@@ -21,7 +21,7 @@ class Garden extends Phaser.Scene {
         this.ToonifyPlugin = this.plugins.get('rextoonifypipelineplugin');
         // this.cameraFilter = GrayscalePlugin.add(this.cameras.main, { intensity: 0.7 });
         // this.cameras.main.setPostPipeline('Gray');
-        this.loadLevel("power3");
+        this.loadLevel(0);
     }
 
     update(time, delta){
