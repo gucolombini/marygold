@@ -50,6 +50,8 @@ class Loading extends Phaser.Scene {
       this.load.image('portrait_mary_eye', 'src/public/assets/portraits/portrait_mary_eye.png');
       this.load.image('portrait_mary_hole', 'src/public/assets/portraits/portrait_mary_hole.png');
       this.load.image('portrait_exclamation', 'src/public/assets/portraits/portrait_exclamation.png');
+
+      this.load.image('static_face', 'src/public/assets/static/face.png');
   
       this.load.audio('bruh', 'src/public/assets/audio/blip_mary.ogg');
 
@@ -85,6 +87,10 @@ class Loading extends Phaser.Scene {
       this.load.spritesheet('shine', 'src/public/assets/shine.png', {
         frameWidth: 80,
         frameHeight: 80,
+      });
+      this.load.spritesheet('enemy', 'src/public/assets/enemy.png', {
+        frameWidth: 141,
+        frameHeight: 137,
       });
     }
   

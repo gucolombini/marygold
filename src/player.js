@@ -221,7 +221,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             y: { from: this.y, to: goal[1]},
             duration: 600,
             yoyo: false,
-            repeat: 0, // Infinite loop
+            repeat: 0,
             ease: 'Sine.easeInOut',
             easeParams: [3.5],
             onComplete: () => {
