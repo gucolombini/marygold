@@ -9,6 +9,7 @@ class Loading extends Phaser.Scene {
     loadedFile;
   
     preload() {
+      this.add.rectangle(0, 0, 800, 600, 0x272036).setOrigin(0);
       // Adiciona um texto na tela
       this.loadingText = this.add
       .text(width / 2, height / 2, "Loading: " + this.loadingProgress + "%/n" + this.loadedFile, {
@@ -43,6 +44,8 @@ class Loading extends Phaser.Scene {
       this.load.image('tooltip_space', 'src/public/assets/tooltipSPACE.png');
       this.load.image('dialogbox', 'src/public/assets/dialogbox.png');
       this.load.image('fence', 'src/public/assets/fence.png');
+      this.load.image('forestfloor', 'src/public/assets/forestfloor.png');
+      this.load.image('blood', 'src/public/assets/red.png');
   
       this.load.image('portrait_mary', 'src/public/assets/portraits/portrait_mary.png');
       this.load.image('portrait_mary_worried', 'src/public/assets/portraits/portrait_mary_worried.png');
@@ -52,13 +55,22 @@ class Loading extends Phaser.Scene {
       this.load.image('portrait_exclamation', 'src/public/assets/portraits/portrait_exclamation.png');
 
       this.load.image('static_face', 'src/public/assets/static/face.png');
+      this.load.image('static_neck', 'src/public/assets/static/neck.png');
+      this.load.image('static_face_agape', 'src/public/assets/static/face_agape.png');
+      this.load.image('head', 'src/public/assets/static/head.png');
   
       this.load.audio('bruh', 'src/public/assets/audio/blip_mary.ogg');
+      this.load.audio('footsteps_grass', 'src/public/assets/audio/footsteps_grass.ogg');
 
       this.load.spritesheet('mary', 'src/public/assets/mary.png', {
         frameWidth: 104,
         frameHeight: 119,
       });
+      this.load.spritesheet('marysoul', 'src/public/assets/marysoul.png', {
+        frameWidth: 104,
+        frameHeight: 119,
+      });
+
 
       // mapa tilesets e elementos especiais
       for (let i = 0; i < 16; i++) {

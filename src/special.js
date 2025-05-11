@@ -331,7 +331,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
             scene.time.delayedCall(1500, () => {
                 const jumpscare = scene.add.image(400, 300, "static_face").setDepth(99);
                 scene.music.setVolume(0);
-                scene.time.delayedCall(1500, () => {
+                scene.time.delayedCall(4000, () => {
                     jumpscare.destroy();
                     scene.loadLevel(11);
                 })
@@ -341,10 +341,11 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
             this.isActive = false;
             new Shine(scene, scene.player.x, scene.player.y)
             scene.time.delayedCall(100, () => {
-                const jumpscare = scene.add.image(400, 300, "static_face").setDepth(99);
-                scene.time.delayedCall(500, () => {
-                    jumpscare.destroy();
-                    scene.loadLevel(11);
+                scene.music.stop();
+                const jumpscare = scene.add.image(400, 300, "static_neck").setDepth(99);
+                scene.time.delayedCall(4000, () => {
+                    //jumpscare.destroy();
+                    scene.scene.start("Forest");
                 })
             })
         }

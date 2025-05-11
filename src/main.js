@@ -11,7 +11,7 @@ var config = {
   disableContextMenu: true, // Desativa a interação do navegador com o botão direito do mouse
   //CONSERTAR ENQUADRAMENTO
   scale: { mode: Phaser.Scale.FIT }, //Dimensiona o conteúdo para que ele preencha a tela inteira, mantendo sua proporção
-  backgroundColor: "#272036", //define a cor de fundo
+  backgroundColor: "#000000", //define a cor de fundo
   pixelArt: true,
   roundPixels: true,
   //Adicionando as classes/cenas do jogo, conforme a ordem do gameflow
@@ -27,7 +27,7 @@ var config = {
     mode: Phaser.Scale.NONE, // No automatic scaling
     autoCenter: Phaser.Scale.NO_CENTER // Optional: don’t auto center
   },
-  scene: [Title, Loading, Garden],
+  scene: [Title, Loading, Garden, Forest, Cutscene],
 };
 
 // Instanciando o phaser
@@ -191,7 +191,7 @@ function runEvery(scene, interval, delta, key, callback) {
  * @param {number} [speedInMs=25]
  * @returns {Promise<void>}
  */
-function animateText(target, speedInMs = 25, sound) {
+function animateText(target, speedInMs = 25, sound, highestPitch, lowestPitch) {
   // store original text
   const message = target.text;
   const invisibleMessage = message.replace(/[^ ]/g, " ");
@@ -215,8 +215,9 @@ function animateText(target, speedInMs = 25, sound) {
         }
 
         // add next character to visible text
-        if (sound != null && message[visibleText.length] != " " && message[visibleText.length] != "!" && message[visibleText.length] != "?" && message[visibleText.length] != "." && message[visibleText.length] != ",") {
-          rate = Phaser.Math.Between(8, 12)/10
+        if (sound != null && message[visibleText.length] != " " && message[visibleText.length] != "!" && message[visibleText.length] != "?" && message[visibleText.length] != "," && message[visibleText.length] != ",") {
+          if (highestPitch && lowestPitch) rate = Phaser.Math.Between(lowestPitch*10, highestPitch*10)/10
+          else rate = Phaser.Math.Between(8, 12)/10
           sound.setRate(rate)
           sound.play();
         }

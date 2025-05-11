@@ -23,7 +23,7 @@ class Garden extends Phaser.Scene {
         this.hslAdjustPlugin = this.plugins.get('rexhsladjustpipelineplugin');
         // this.cameraFilter = GrayscalePlugin.add(this.cameras.main, { intensity: 0.7 });
         // this.cameras.main.setPostPipeline('Gray');
-        this.loadLevel(0);
+        this.loadLevel(12, true);
     }
 
     update(time, delta){
@@ -54,7 +54,7 @@ class Garden extends Phaser.Scene {
     enemiesLogic(delta) {
         if(this.enemies) {
             this.enemies.forEach(obj => {
-                if (obj.body.y <= this.player.body.center.y) obj.setDepth(this.player.depth-1);
+                if (obj.y+48 <= this.player.body.y+this.player.body.height) obj.setDepth(this.player.depth-1);
                 else obj.setDepth(this.player.depth+1);
                 obj.enemyLogic(delta);
             })
@@ -133,7 +133,7 @@ class Garden extends Phaser.Scene {
 
         if(this.player) this.player.destroy();
         this.player = new Player(this, 200, 200);
-        this.player.dialogStart('intro'+(level))
+        this.time.delayedCall(1000, () => {this.player.dialogStart('intro'+(level))})
 
         this.physics.add.collider(this.player, this.bg.fence);
 
