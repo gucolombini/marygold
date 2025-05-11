@@ -23,7 +23,7 @@ class Garden extends Phaser.Scene {
         this.hslAdjustPlugin = this.plugins.get('rexhsladjustpipelineplugin');
         // this.cameraFilter = GrayscalePlugin.add(this.cameras.main, { intensity: 0.7 });
         // this.cameras.main.setPostPipeline('Gray');
-        this.loadLevel(12, true);
+        this.loadLevel(0, true);
     }
 
     update(time, delta){
