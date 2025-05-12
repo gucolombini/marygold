@@ -77,6 +77,18 @@
                  "width":25,
                  "x":75,
                  "y":450
+                }, 
+                {
+                 "gid":6,
+                 "height":25,
+                 "id":36,
+                 "name":"wolf",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":25,
+                 "x":851.5,
+                 "y":929.5
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -85,7 +97,7 @@
          "y":0
         }],
  "nextlayerid":5,
- "nextobjectid":36,
+ "nextobjectid":37,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

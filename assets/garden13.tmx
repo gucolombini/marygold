@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="32" height="24" tilewidth="25" tileheight="25" infinite="0" nextlayerid="5" nextobjectid="36">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="32" height="24" tilewidth="25" tileheight="25" infinite="0" nextlayerid="5" nextobjectid="37">
  <editorsettings>
   <export target="../src/public/assets/maps/garden1.json" format="json"/>
  </editorsettings>
@@ -38,5 +38,6 @@
   <object id="29" name="playerspawn" gid="2" x="100" y="150" width="25" height="25"/>
   <object id="34" name="carrot" gid="3" x="250" y="550" width="25" height="25"/>
   <object id="35" name="carrot" gid="3" x="750" y="225" width="25" height="25"/>
+  <object id="36" name="wolf" gid="6" x="959.5" y="277.5" width="25" height="25"/>
  </objectgroup>
 </map>

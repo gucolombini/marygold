@@ -36,6 +36,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         if (!this.scene.arrowkeys) this.scene.arrowkeys = this.scene.input.keyboard.createCursorKeys();
         if (!this.scene.spaceKey) this.scene.spaceKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         if (!this.scene.Ekey) this.scene.Ekey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+        if (!this.scene.debugKey) this.scene.debugKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P);
 
         createAnimation(this.scene, this.key+'idledown', this.key, 1, 1, -1, 0);
         createAnimation(this.scene, this.key+'walkdown', this.key, 0, 2, 5, -1, true);
@@ -297,6 +298,10 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         } else this.tooltip.hide();
         this.moveLogic();
         this.dialogLogic();
+        if (Phaser.Input.Keyboard.JustDown(this.scene.debugKey)) {
+            this.dialogEnd()
+            this.scene.loadLevel(10)
+        }
     }
 
     destroy() {

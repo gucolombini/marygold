@@ -272,18 +272,21 @@ function camRefresh(scene) {
 }
 
 class Tooltip extends Phaser.GameObjects.Image {
-    constructor(scene, key, dontAnimate) {
+    constructor(scene, key, dontAnimate, scale) {
         super(scene, 0, 0, 'tooltip_'+key);
         this.setVisible(false);
         this.setDepth(2); // Ensure it shows on top
         scene.add.existing(this);
 
-        if (dontAnimate) return;
+        if (!scale) scale = 1;
+        this.setScale(scale);
+
+        if (dontAnimate && dontAnimate === true) return;
 
         scene.tweens.add({
             targets: this,
             angle: { from: -10, to: 10 },
-            scale: { from: 1, to: 2},
+            // scale: { from: 1, to: 2},
             duration: 1000,
             yoyo: true,
             repeat: -1, // Infinite loop
@@ -292,7 +295,7 @@ class Tooltip extends Phaser.GameObjects.Image {
 
         scene.tweens.add({
             targets: this,
-            scale: { from: 0.9, to: 1.2 },
+            scale: { from: 0.9*scale, to: 1.2*scale },
             duration: 600,
             yoyo: true,
             repeat: -1, // Infinite loop

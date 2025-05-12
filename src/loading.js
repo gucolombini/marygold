@@ -57,6 +57,17 @@ class Loading extends Phaser.Scene {
       this.load.image('static_face', 'src/public/assets/static/face.png');
       this.load.image('static_neck', 'src/public/assets/static/neck.png');
       this.load.image('static_face_agape', 'src/public/assets/static/face_agape.png');
+      this.load.image('static_bite', 'src/public/assets/static/bite.png');
+      this.load.image('wolfstill1', 'src/public/assets/static/wolfstill1.png');
+      this.load.image('wolfstill2', 'src/public/assets/static/wolfstill2.png');
+      this.load.image('wolf2still1', 'src/public/assets/static/wolf2still1.png');
+      this.load.image('wolf2still2', 'src/public/assets/static/wolf2still2.png');
+      this.load.image('remain1', 'src/public/assets/static/remain1.png');
+      this.load.image('remain2', 'src/public/assets/static/remain2.png');
+      this.load.image('closeup1', 'src/public/assets/static/closeup1.png');
+      this.load.image('closeup2', 'src/public/assets/static/closeup2.png');
+      this.load.image('circle1', 'src/public/assets/static/circle1.png');
+      this.load.image('circle2', 'src/public/assets/static/circle2.png');
       this.load.image('head', 'src/public/assets/static/head.png');
   
       this.load.audio('bruh', 'src/public/assets/audio/blip_mary.ogg');
